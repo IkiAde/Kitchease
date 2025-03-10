@@ -6,6 +6,6 @@ import com.example.KitchEase.entity.TableRestaurant;
 
 import java.util.List;
 
-public interface TableRepository extends CrudRepository<TableRestaurant, Long> {
+public interface TableRestaurantRepository extends CrudRepository<TableRestaurant, Long> {
     List<TableRestaurant> findByCapaciteGreaterThanEqual(int capacite);
 }

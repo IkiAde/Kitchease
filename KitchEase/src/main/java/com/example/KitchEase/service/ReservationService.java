@@ -18,7 +18,7 @@ public class ReservationService implements ReservationItf{
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private TableRepository tableRepository;
+    private TableRestaurantRepository tableRepository;
 
     public Reservation createReservation(ReservationRequest request) {
         // Trouver une table disponible pour la date et l'heure choisies

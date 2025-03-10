@@ -83,6 +83,13 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    // Affiche la page d'accueil
+    @GetMapping("/")
+    public String showHomePage(Model model) {
+        return "reservations/home"; // Chemin complet vers home.html
+    }
+
+    // Affiche les horaires disponibles
     @GetMapping("/available-times")
     public String getAvailableTimes(
             @RequestParam LocalDate date,
@@ -97,6 +104,37 @@ public class ReservationController {
         model.addAttribute("nombrePersonnes", nombrePersonnes);
         model.addAttribute("availableTimes", availableTimes);
 
-        return "home"; // Retourne la vue home.html
+        return "reservations/home"; // Retourne la vue home.html dans le dossier reservations
+    }
+
+    // Affiche le formulaire de confirmation de réservation
+    @GetMapping("/new-reservation")
+    public String showReservationForm(
+            @RequestParam LocalDate date,
+            @RequestParam LocalTime heure,
+            @RequestParam int nombrePersonnes,
+            Model model) {
+
+        model.addAttribute("date", date);
+        model.addAttribute("heure", heure);
+        model.addAttribute("nombrePersonnes", nombrePersonnes);
+
+        return "reservations/new-reservation"; // Chemin complet vers new-reservation.html
+    }
+
+    // Traite la confirmation de réservation
+    @PostMapping
+    public String createReservation(@Valid @ModelAttribute ReservationRequest request, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "reservations/new-reservation"; // Retourne vers le formulaire en cas d'erreur
+        }
+
+        // Créer la réservation
+        Reservation reservation = reservationService.createReservation(request);
+
+        // Ajouter la réservation au modèle pour l'affichage
+        model.addAttribute("reservation", reservation);
+
+        return "reservations/reservation-confirmation"; // Chemin complet vers reservation-confirmation.html
     }
 }

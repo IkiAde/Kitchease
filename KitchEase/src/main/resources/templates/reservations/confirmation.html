@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation de Réservation - KitchEase</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Styles CSS (similaires à home.html) */
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img th:src="@{/images/logo.jpg}" alt="Logo">
+                <strong>KitchEase</strong>
+            </a>
+            <div class="ms-auto d-flex align-items-center">
+                <div class="navbar-nav">
+                    <a href="/">Accueil</a>
+                    <a href="/menu">Menu</a>
+                </div>
+                <a href="/reservations/" class="btn btn-reserver">Réserver</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Confirmation de réservation -->
+    <div class="container mt-5">
+        <h2>Réservation confirmée</h2>
+        <p>Merci, <span th:text="${reservation.client.nom}"></span> !</p>
+        <p>Votre réservation pour le <span th:text="${reservation.date}"></span> à <span th:text="${reservation.heure}"></span> a bien été enregistrée.</p>
+        <p>Nombre de personnes : <span th:text="${reservation.nombrePersonnes}"></span></p>
+        <a href="/reservations/" class="btn btn-reserver">Retour à l'accueil</a>
+    </div>
+</body>
+</html>
