@@ -160,6 +160,40 @@
             background-color: #1d8c87; /* Couleur verte pour le survol */
         }
 
+        /* Section des horaires disponibles */
+        .available-times {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .available-times h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .available-times ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .available-times li {
+            display: inline-block;
+            margin: 5px;
+        }
+
+        .available-times a {
+            background-color: #2AD3C9;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .available-times a:hover {
+            background-color: #1d8c87;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .home h2 {
@@ -209,14 +243,10 @@
 
 <!-- Formulaire de réservation -->
 <div class="form-container container">
-    <form action="/rechercher-disponibilites" method="POST" class="d-flex flex-wrap gap-3 justify-content-center">
+    <form action="/reservations/available-times" method="GET" class="d-flex flex-wrap gap-3 justify-content-center">
         <div>
             <i class="fa fa-calendar-alt"></i>
-            <input type="date" class="form-control" id="date" name="date" required value="">
-        </div>
-        <div>
-            <i class="fa fa-clock"></i>
-            <input type="time" class="form-control" id="heure" name="heure" required value="">
+            <input type="date" class="form-control" id="date" name="date" required th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
         </div>
         <div>
             <i class="fa fa-users"></i>
@@ -236,16 +266,19 @@
     </form>
 </div>
 
+<!-- Section pour afficher les horaires disponibles -->
+<div class="available-times container" th:if="${availableTimes != null}">
+    <h3>Horaires disponibles</h3>
+    <ul>
+        <li th:each="time : ${availableTimes}">
+            <a th:href="@{/reservations/new-reservation(date=${date}, heure=${time}, nombrePersonnes=${nombrePersonnes})}" th:text="${time}"></a>
+        </li>
+    </ul>
+</div>
+
 <script>
-    //pour afficher l'heure actuelle
+    // Pour afficher la date actuelle par défaut
     document.getElementById('date').valueAsDate = new Date();
-    
-    let heureLocale = new Date().toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
-    document.getElementById('heure').value = heureLocale; 
 </script>
 
 </body>
