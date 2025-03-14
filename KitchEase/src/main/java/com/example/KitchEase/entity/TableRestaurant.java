@@ -20,6 +20,8 @@ public class TableRestaurant {
 		this.capacite = capacite;
 	}
     
+    public TableRestaurant() {};
+    
     public int getCapacite() {
 		return capacite;
 	}

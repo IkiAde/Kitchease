@@ -3,6 +3,7 @@ package com.example.KitchEase.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -75,7 +76,7 @@ public class Reservation {
 		return idReservation;
 	}
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL) // Sauvegarder automatiquement le client
     private Client client;
 
     @ManyToOne

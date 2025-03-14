@@ -11,6 +11,8 @@ import com.example.KitchEase.Interface.ReservationItf;
 import com.example.KitchEase.entity.*;
 import com.example.KitchEase.repository.*;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ReservationService implements ReservationItf{
 	
@@ -19,9 +21,20 @@ public class ReservationService implements ReservationItf{
 
     @Autowired
     private TableRestaurantRepository tableRepository;
+    
+    @Autowired
+    private ClientRepository clientRepository;
 
+    @Transactional
     public Reservation createReservation(ReservationRequest request) {
-        // Trouver une table disponible pour la date et l'heure choisies
+        // Créer et sauvegarder le client
+        Client client = new Client();
+        client.setNom(request.getNom());
+        client.setEmail(request.getEmail());
+        client.setTelephone(request.getTelephone());
+        client = clientRepository.save(client); // Sauvegarder le client
+
+        // Trouver une table disponible
         List<TableRestaurant> tablesDisponibles = tableRepository.findByCapaciteGreaterThanEqual(request.getNombrePersonnes());
 
         TableRestaurant tableDisponible = tablesDisponibles.stream()
@@ -30,21 +43,15 @@ public class ReservationService implements ReservationItf{
             .findFirst()
             .orElseThrow(() -> new RuntimeException("Aucune table disponible pour cette date et heure"));
 
-        // Créer un client à partir des données de la requête
-        Client client = new Client();
-        client.setNom(request.getNom());
-        client.setEmail(request.getEmail());
-        client.setTelephone(request.getTelephone());
-
         // Créer la réservation
         Reservation reservation = new Reservation();
         reservation.setDate(request.getDate());
         reservation.setHeure(request.getHeure());
         reservation.setNombrePersonnes(request.getNombrePersonnes());
-        reservation.setClient(client);
+        reservation.setClient(client); // Associer le client sauvegardé
         reservation.setTable(tableDisponible);
 
-        // Enregistrer la réservation dans la base de données
+        // Sauvegarder la réservation
         return reservationRepository.save(reservation);
     }
 

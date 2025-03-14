@@ -126,7 +126,7 @@ public class ReservationController {
     @PostMapping
     public String createReservation(@Valid @ModelAttribute ReservationRequest request, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "reservations/new-reservation"; // Retourne vers le formulaire en cas d'erreur
+            return "new-reservation"; // Retourne vers le formulaire en cas d'erreur
         }
 
         // Créer la réservation
@@ -135,6 +135,6 @@ public class ReservationController {
         // Ajouter la réservation au modèle pour l'affichage
         model.addAttribute("reservation", reservation);
 
-        return "reservations/reservation-confirmation"; // Chemin complet vers reservation-confirmation.html
+        return "reservations/confirmation"; // Retourne la vue reservation-confirmation.html
     }
 }
