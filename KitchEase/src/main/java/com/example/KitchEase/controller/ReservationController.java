@@ -29,41 +29,7 @@ public class ReservationController {
     public String showHomePage(Model model) {
         return "reservations/home"; // Chemin complet vers home.html
     }
-
-    /*
-    @GetMapping("/available-times")
-    public String getAvailableTimes(
-            @RequestParam LocalDate date,
-            @RequestParam int nombrePersonnes,
-            Model model) {
-
-        // Récupérer les horaires disponibles
-        List<LocalTime> availableTimes = reservationService.getAvailableTimes(date, nombrePersonnes);
-
-        // Ajouter les données au modèle
-        model.addAttribute("date", date);
-        model.addAttribute("nombrePersonnes", nombrePersonnes);
-        model.addAttribute("availableTimes", availableTimes);
-
-        return "reservations/home"; // Retourne la vue home.html dans le dossier reservations
-    }
-
-    // Affiche le formulaire de confirmation de réservation
-    @GetMapping("/new-reservation")
-    public String showReservationForm(
-            @RequestParam LocalDate date,
-            @RequestParam LocalTime heure,
-            @RequestParam int nombrePersonnes,
-            Model model) {
-
-        model.addAttribute("date", date);
-        model.addAttribute("heure", heure);
-        model.addAttribute("nombrePersonnes", nombrePersonnes);
-
-        return "reservations/new-reservation"; // Chemin complet vers new-reservation.html
-    }*/
-    
-    
+      
     @GetMapping("/available-times")
     public String getAvailableTimes(
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
