@@ -24,6 +24,9 @@ public class ReservationService implements ReservationItf{
     
     @Autowired
     private ClientRepository clientRepository;
+    
+    @Autowired
+    private EmailService emailService;
 
     @Transactional
     public Reservation createReservation(ReservationRequest request) {
@@ -50,9 +53,15 @@ public class ReservationService implements ReservationItf{
         reservation.setNombrePersonnes(request.getNombrePersonnes());
         reservation.setClient(client); // Associer le client sauvegardé
         reservation.setTable(tableDisponible);
-
+        
+        
         // Sauvegarder la réservation
-        return reservationRepository.save(reservation);
+        reservation = reservationRepository.save(reservation);
+
+        // Envoyer l'e-mail après sauvegarde
+        emailService.envoyerConfirmationReservation(client.getEmail(), reservation);
+
+        return reservation;
     }
 
 	@Override
