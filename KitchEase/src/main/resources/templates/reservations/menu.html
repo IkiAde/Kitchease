@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu - KitchEase</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+        }
+        .navbar {
+            background: #fff;
+            padding: 15px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2AD3C9;
+        }
+        .navbar-nav a {
+            color: #2AD3C9;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+        .navbar-nav a:hover {
+            color: #1d8c87;
+        }
+        .btn-reserver {
+            background-color: #2AD3C9;
+            color: white;
+            border-radius: 20px;
+            padding: 10px 30px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .btn-reserver:hover {
+            background-color: #1d8c87;
+        }
+        .menu-categories {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .menu-categories button {
+            background: #2AD3C9;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .menu-categories button:hover {
+            background: #1d8c87;
+        }
+        .menu-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .menu-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .menu-item:hover {
+            transform: scale(1.05);
+        }
+        .menu-item img {
+            width: 100%;
+            height: 180px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .menu-item h4 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-top: 10px;
+        }
+        .menu-item p {
+            color: #777;
+            font-size: 0.9rem;
+        }
+        .menu-item .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2AD3C9;
+            margin-top: 10px;
+        }
+        .quantity-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .quantity-container button {
+            background-color: #2AD3C9;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .quantity-container input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        .quantity-container button:hover {
+            background-color: #1d8c87;
+        }
+        .menu-item .btn-add {
+            background-color: #2AD3C9;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-size: 1rem;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .menu-item .btn-add:hover {
+            background-color: #1d8c87;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img th:src="@{/images/logo.jpg}" alt="Logo">
+                <strong>KitchEase</strong>
+            </a>
+            <div class="ms-auto d-flex align-items-center">
+                <div class="navbar-nav">
+                    <a href="/reservations/">Accueil</a>
+                    <a href="/menu">Menu</a>
+                </div>
+                <a href="/reservations" class="btn btn-reserver">Réserver</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="text-center mt-4">Notre Menu</h2>
+        <div class="menu-categories">
+            <button onclick="showCategory('entrees')">Entrées</button>
+            <button onclick="showCategory('plats')">Plats Principaux</button>
+            <button onclick="showCategory('pizzas')"> Pizzas & Pâtes</button>
+            <button onclick="showCategory('burgers')">Burgers</button>
+            <button onclick="showCategory('salades')"> Salades Fraîcheur</button>
+            <button onclick="showCategory('desserts')"> Desserts Maison</button>
+            <button onclick="showCategory('boissons')"> Boissons & Vins</button>
+        </div>
+        <div class="menu-items" id="menu-items">
+            <!-- Les articles du menu seront affichés ici -->
+        </div>
+    </div>
+
+    <script>
+        const menuData = {
+            entrees: [
+                {name: 'Soupe à l’oignon gratinée', description: 'Soupe d’oignons caramélisés, gratinée au fromage fondu', price: '7.50€', img: '/images/soupe.png'},
+                {name: 'Carpaccio de bœuf, parmesan & roquette', description: 'Tranches de bœuf cru, roquette fraîche et parmesan', price: '9.90€', img: '/images/carpaccio.jpeg'},
+                {name: 'Foie gras maison & chutney de figues', description: 'Foie gras maison servi avec un chutney de figues sucré', price: '12.90€', img: '/images/foie.jpg'}
+            ],
+            plats: [
+                {name: 'Entrecôte grillée & frites maison', description: 'Entrecôte savoureuse grillée, accompagnée dune sauce poivrée et de frites maison', price: '18.90€', img: '/images/entrecote.jpg'},
+                {name: 'Magret de canard & purée de patate', description: 'Magret de canard rôti, servi avec une onctueuse purée de patate douce.', price: '19.50€', img: '/images/magret.png'},
+                {name: 'Saumon rôti & légumes sautés', description: 'Saumon rôti, nappé d’une crème à l’estragon, accompagné de légumes sautés', price: '17.90€', img: '/images/saumon.jpg'},
+                {name: 'Risotto aux champignons ', description: 'Risotto crémeux aux champignons, relevé de parmesan râpé', price: '16.50€', img: '/images/risotto.jpg'}
+            ],
+            pizzas: [
+                {name: 'Pizza Reine ', description: 'Pizza garnie de jambon, champignons frais et fromage fondant', price: '13,90€', img: '/images/reine.png'},
+                {name: 'Pizza 4 Fromages', description: 'Pizza savoureuse avec une sélection de quatre fromages : mozzarella, chèvre, gorgonzola et parmesan', price: '14.50€', img: '/images/fromage.jpeg'},
+                {name: 'Tagliatelles aux fruits de mer', description: 'Tagliatelles fraîches accompagnées de fruits de mer, nappées d’une crème à l’ail', price: '15.90€', img: '/images/tagliatelle.jpg'},
+                {name: 'Lasagnes maison façon grand-mère', description: 'Lasagnes traditionnelles maison, avec une sauce bolognaise généreuse et du fromage fondant', price: '14.90€', img: '/images/lasagne.png'}
+            ],
+            burgers: [
+                {name: 'Cheeseburger classique', description: 'Burger de bœuf avec cheddar, salade, tomate, avec une sauce maison', price: '13.50€', img: '/images/cheeseburger.jpg'},
+                {name: 'Burger Poulet', description: 'Burger au poulet croustillant, accompagné d’une sauce barbecue savoureuse', price: '14.50€', img: '/images/burgerpoulet.jpg'}
+            ],
+            salades: [
+                {name: 'Salade César', description: 'Salade croquante avec poulet grillé, parmesan, croûtons et sauce césar crémeuse', price: '12.90€', img: '/images/cesar.png'},
+                {name: 'Salade Grecque', description: 'Salade fraîche de feta, olives, tomates et concombre, avec une vinaigrette citronnée', price: '11.90€', img: '/images/grecque.png'},
+                {name: 'Salade Niçoise', description: 'Salade complète avec thon, œuf, anchois, haricots verts, olives et tomates', price: '13.50€', img: '/images/nicoise.jpg'}
+            ],
+            desserts: [
+                {name: 'Tiramisu au café & cacao', description: 'Dessert italien classique crémeux avec café, mascarpone et cacao', price: '6.50€', img: '/images/tiramisu.jpeg'},
+                {name: 'Fondant au chocolat, cœur coulant', description: 'Fondant au chocolat avec un cœur fondant et un léger goût de cacao', price: '7€', img: '/images/fondant.png'},
+                {name: 'Tarte aux pommes façon grand-mère', description: 'Tarte maison aux pommes, avec une pâte légère et une touche de cannelle', price: '6.90€', img: '/images/tarte.jpg'},
+                {name: 'Crème brûlée à la vanille de Madagascar', description: 'Crème brûlée onctueuse à la vanille de Madagascar, avec une croûte caramélisée', price: '7.50€', img: '/images/creme.png'}
+            ],
+            boissons: [
+                {name: 'Verre de vin rouge ou blanc', description: 'Vin de qualité', price: '5.50€', img: '/images/vin.jpg'}
+            ]
+        };
+
+        let cart = [];
+
+        function showCategory(category) {
+            const itemsContainer = document.getElementById('menu-items');
+            itemsContainer.innerHTML = '';
+            menuData[category].forEach(item => {
+                itemsContainer.innerHTML += `
+                    <div class="menu-item">
+                        <img src="${item.img}" alt="${item.name}">
+                        <h4>${item.name}</h4>
+                        <p>${item.description}</p>
+                        <p class="price"><strong>${item.price}</strong></p>
+                        <div class="quantity-container">
+                            <button onclick="changeQuantity('${item.name}', -1)">-</button>
+                            <input type="text" id="quantity-${item.name}" value="1" readonly>
+                            <button onclick="changeQuantity('${item.name}', 1)">+</button>
+                        </div>
+                        <button class="btn-add" onclick="addToCart('${item.name}', '${item.price}')">Ajouter</button>
+                    </div>
+                `;
+            });
+        }
+
+        function changeQuantity(itemName, delta) {
+            const quantityInput = document.getElementById(`quantity-${itemName}`);
+            let currentQuantity = parseInt(quantityInput.value);
+            if (currentQuantity + delta > 0) {
+                quantityInput.value = currentQuantity + delta;
+            }
+        }
+
+        function addToCart(name, price) {
+            const quantity = document.getElementById(`quantity-${name}`).value;
+            const item = { name, price, quantity: parseInt(quantity) };
+
+            // Vérifier si l'article est déjà dans le panier
+            const existingItem = cart.find(i => i.name === name);
+            if (existingItem) {
+                existingItem.quantity += item.quantity;
+            } else {
+                cart.push(item);
+            }
+
+            console.log("Panier:", cart);
+        }
+    </script>
+</body>
+</html>
