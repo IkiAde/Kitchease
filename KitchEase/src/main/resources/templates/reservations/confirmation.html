@@ -6,7 +6,114 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        /* Styles CSS (similaires à home.html) */
+		body {
+		            font-family: 'Arial', sans-serif;
+		            background-color: #f7f7f7;
+		        }
+
+		        /* Navbar */
+		        .navbar {
+		            background: #fff;
+		            padding: 15px 0;
+		            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		        }
+
+		        .navbar-brand img {
+		            height: 50px;
+		            margin-right: 15px;
+		        }
+
+		        .navbar-brand {
+		            font-size: 1.8rem;
+		            font-weight: bold;
+		            color: #2AD3C9; /* Couleur verte pour le nom du restaurant */
+		        }
+
+		        /* Espacement des éléments du menu */
+		        .navbar-nav {
+		            display: flex;
+		            gap: 30px; /* Espace entre les éléments */
+		        }
+
+		        .navbar-nav a {
+		            color: #2AD3C9; /* Couleur verte pour "Accueil" et "Menu" */
+		            font-size: 1.1rem;
+		            text-decoration: none;
+		        }
+
+		        .navbar-nav a:hover {
+		            color: #1d8c87; /* Changer de couleur au survol */
+		        }
+
+		        /* Bouton "Réserver" */
+		        .btn-reserver {
+		            background-color: #2AD3C9; /* Couleur verte pour le bouton */
+		            color: white;
+		            border-radius: 20px;
+		            padding: 10px 30px;
+		            font-weight: bold;
+		            transition: background-color 0.3s ease;
+		            margin-left: 40px; /* Espace entre le menu et le bouton Réserver */
+		        }
+
+		        .btn-reserver:hover {
+		            background-color: #1d8c87; /* Changer de couleur au survol */
+		            color: white;
+		        }
+
+		        /* Confirmation de réservation */
+		        .container.mt-5 {
+		            background: white;
+		            padding: 30px;
+		            border-radius: 10px;
+		            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+		            margin-top: 40px;
+		            text-align: center;
+		        }
+
+		        .container.mt-5 h2 {
+		            font-size: 2rem;
+		            color: #2AD3C9; /* Couleur verte pour le titre */
+		            margin-bottom: 20px;
+		        }
+
+		        .container.mt-5 p {
+		            font-size: 1.2rem;
+		            color: #333;
+		            margin-bottom: 15px;
+		        }
+
+		        .container.mt-5 a.btn-reserver {
+		            margin-top: 20px;
+		            display: inline-block;
+		        }
+
+		        /* Responsive Design */
+		        @media (max-width: 768px) {
+		            .navbar-nav {
+		                flex-direction: column;
+		                gap: 10px;
+		            }
+
+		            .btn-reserver {
+		                width: 100%;
+		                padding: 15px;
+		                font-size: 1.2rem;
+		                margin-left: 0;
+		            }
+
+		            .container.mt-5 {
+		                padding: 20px;
+		            }
+
+		            .container.mt-5 h2 {
+		                font-size: 1.8rem;
+		            }
+
+		            .container.mt-5 p {
+		                font-size: 1rem;
+		            }
+		        }
     </style>
 </head>
 <body>
