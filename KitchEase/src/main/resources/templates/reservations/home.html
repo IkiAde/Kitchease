@@ -58,6 +58,7 @@
 
         .btn-reserver:hover {
             background-color: #1d8c87; /* Changer de couleur au survol */
+            color: white;
         }
 
         /* Home Section */
@@ -160,38 +161,52 @@
         }
 
         /* Section des horaires disponibles */
-        .available-times {
-            margin-top: 20px;
-            text-align: center;
-        }
+		.available-times {
+		    margin-top: 40px;
+		    text-align: center;
+		    padding: 20px;
+		    background-color: white;
+		    border-radius: 10px;
+		    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+		    width: 80%;
+		    max-width: 900px;
+		    margin: 20px auto;
+		}
 
-        .available-times h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
+		.available-times h3 {
+		    font-size: 1.8rem;
+		    margin-bottom: 20px;
+		    color: #2AD3C9; /* Couleur verte pour le titre */
+		}
 
-        .available-times ul {
-            list-style: none;
-            padding: 0;
-        }
+		.available-times ul {
+		    list-style: none;
+		    padding: 0;
+		    display: flex;
+		    flex-wrap: wrap;
+		    justify-content: center;
+		    gap: 10px;
+		}
 
-        .available-times li {
-            display: inline-block;
-            margin: 5px;
-        }
+		.available-times li {
+		    display: inline-block;
+		    margin: 5px;
+		}
 
-        .available-times a {
-            background-color: #2AD3C9;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
+		.available-times a {
+		    background-color: #2AD3C9;
+		    color: white;
+		    padding: 10px 20px;
+		    border-radius: 10px;
+		    text-decoration: none;
+		    transition: background-color 0.3s ease;
+		    display: inline-block;
+		    font-size: 1rem;
+		}
 
-        .available-times a:hover {
-            background-color: #1d8c87;
-        }
+		.available-times a:hover {
+		    background-color: #1d8c87; /* Couleur verte plus foncée au survol */
+		}
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -210,6 +225,20 @@
                 padding: 15px;
                 font-size: 1.2rem;
             }
+			
+			.available-times {
+			     width: 95%;
+			     padding: 15px;
+			}
+
+			.available-times h3 {
+		        font-size: 1.5rem;
+		    }
+
+		    .available-times a {
+		        padding: 8px 15px;
+		        font-size: 0.9rem;
+		    }
         }
     </style>
 </head>
@@ -264,7 +293,7 @@
     </div>
 
     <!-- Section pour afficher les horaires disponibles -->
-    <div th:if="${availableTimes != null}">
+    <div th:if="${availableTimes != null}" class="available-times">
     <h3>Horaires disponibles</h3>
     <ul>
         <li th:each="time : ${availableTimes}">
