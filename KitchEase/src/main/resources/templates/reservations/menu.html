@@ -327,6 +327,52 @@
     </div>
 
     <script>
+
+        //=======================>DEBUT ON LANDING PAGE <========================
+
+        const menuItemsContainer = document.getElementById("menu-items");
+
+        function renderItems(items) {
+            menuItemsContainer.innerHTML = ''; // Clear existing
+            items.forEach(item => {
+                const itemDiv = document.createElement("div");
+                itemDiv.classList.add("menu-item");
+                itemDiv.innerHTML = `
+                    <img src="${item.img}" alt="${item.name}">
+                        <h4>${item.name}</h4>
+                        <p>${item.description}</p>
+                        <p class="price"><strong>${item.price}</strong></p>
+                        <div class="quantity-container">
+                            <button onclick="decreaseQuantity('${item.name}')">-</button>
+                            <input type="number" value="1" id="quantity-${item.name}" min="1">
+                            <button onclick="increaseQuantity('${item.name}')">+</button>
+                        </div>
+                        <button class="btn-add" onclick="addToCart('${item.name}', '${item.price}', '${item.img}')">Ajouter au Panier</button>
+                     `;
+                menuItemsContainer.appendChild(itemDiv);
+            });
+        }
+
+        function showCategory(category) {
+            renderItems(menuData[category]);
+        }
+
+        // Merge all items from all categories
+        function getAllItems() {
+            return Object.values(menuData).flat();
+        }
+
+        // Load all items initially
+        window.onload = function() {
+            renderItems(getAllItems());
+        }
+
+
+        //=======================>FIN ON LANDING PAGE <========================
+
+
+        //=======================> DEBUT SUB CATEGORIES <========================
+
         const menuData = {
             entrees: [
                 {name: 'Soupe à l’oignon gratinée', description: 'Soupe d’oignons caramélisés, gratinée au fromage fondu', price: '7.50€', img: '/images/soupe.png'},
@@ -498,7 +544,20 @@
             cartDiv.style.display = cartDiv.style.display === 'none' || cartDiv.style.display === '' ? 'block' : 'none';
         }
 
+
+
+        // On landing menu page
+
+
+
+        
+
     </script>
+
+
+
+
+
 </body>
 </html>
 
