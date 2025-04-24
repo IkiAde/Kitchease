@@ -140,6 +140,11 @@
         .menu-item .btn-add:hover {
             background-color: #1d8c87;
         }
+        #cart-count {
+        font-size: 0.75rem;
+        padding: 4px 6px;
+        }
+
     </style>
 </head>
 <body>
@@ -156,6 +161,17 @@
                 </div>
                 <a href="/reservations" class="btn btn-reserver">Réserver</a>
             </div>
+
+            <!-- Panier icon action -->
+            <div class="ms-3 position-relative">
+                <a href="/cart" class="text-decoration-none position-relative">
+                    <i class="fa fa-shopping-cart fa-lg" style="color: #2AD3C9;"></i>
+                    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        0
+                    </span>
+                </a>
+            </div>
+            <!-- fin panier -->
         </div>
     </nav>
 
@@ -245,20 +261,24 @@
             }
         }
 
-        function addToCart(name, price) {
-            const quantity = document.getElementById(`quantity-${name}`).value;
-            const item = { name, price, quantity: parseInt(quantity) };
 
-            // Vérifier si l'article est déjà dans le panier
+        // add item to cart
+        function addToCart(name, price) {
+            const quantity = parseInt(document.getElementById(`quantity-${name}`).value);
             const existingItem = cart.find(i => i.name === name);
             if (existingItem) {
-                existingItem.quantity += item.quantity;
+                existingItem.quantity += quantity;
             } else {
-                cart.push(item);
+                cart.push({ name, price, quantity });
             }
-
-            console.log("Panier:", cart);
+            updateCartCount(); 
         }
+
+        function updateCartCount() {
+            const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').innerText = totalQuantity;
+        }
+
     </script>
 </body>
 </html>
