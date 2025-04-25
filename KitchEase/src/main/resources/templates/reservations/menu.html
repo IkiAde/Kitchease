@@ -147,6 +147,7 @@
         .menu-item .btn-add:hover {
             background-color: #1d8c87;
         }
+
                 /* Nouveau style du Panier */
         .cart {
             position: fixed;
@@ -263,6 +264,7 @@
         #cart-count {
             font-size: 0.76rem;
             padding: 4px 6px;
+
         }
 
     </style>
@@ -529,8 +531,9 @@
             if (cart.length === 0) {
                 alert('Votre panier est vide!');
                 return;
-            }
 
+            }
+          
             // Sauvegarde du panier dans le localStorage
             localStorage.setItem('panier', JSON.stringify(cart));
 
@@ -551,6 +554,7 @@
 
 
         
+
 
     </script>
 
