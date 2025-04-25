@@ -15,6 +15,11 @@
             padding: 15px 0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+        /* Espacement des éléments du menu */
+        .navbar-nav {
+            display: flex;
+            gap: 30px; /* Espace entre les éléments */
+        }
         .navbar-brand img {
             height: 50px;
             margin-right: 15px;
@@ -32,13 +37,15 @@
         .navbar-nav a:hover {
             color: #1d8c87;
         }
+        /* Bouton "Réserver" */
         .btn-reserver {
-            background-color: #2AD3C9;
+            background-color: #2AD3C9; /* Couleur verte pour le bouton */
             color: white;
             border-radius: 20px;
             padding: 10px 30px;
             font-weight: bold;
             transition: background-color 0.3s ease;
+            margin-left: 40px; /* Espace entre le menu et le bouton Réserver */
         }
         .btn-reserver:hover {
             background-color: #1d8c87;
@@ -140,14 +147,130 @@
         .menu-item .btn-add:hover {
             background-color: #1d8c87;
         }
+
+                /* Nouveau style du Panier */
+        .cart {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            width: 340px;
+            display: none;
+            z-index: 999;
+            font-weight: bold;
+            font-family: 'Segoe UI', sans-serif;
+            color: #2a2a2a;
+            border: 1px solid #e0e0e0;
+        }
+
+        .cart h4 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            color: #2AD3C9;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .cart .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            background-color: #f9f9f9;
+            padding: 10px 12px;
+            border-radius: 12px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .cart .cart-item-name {
+            font-size: 0.95rem;
+            color: #333;
+            flex: 1;
+        }
+
+        .cart .cart-item-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .cart .btn-remove {
+            background-color: #ffebeb;
+            color: #e63946;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .cart .btn-remove:hover {
+            background-color: #ff4d4d;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .cart .btn-increase,
+        .cart .btn-decrease {
+            background-color: #2AD3C9;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart .btn-increase:hover,
+        .cart .btn-decrease:hover {
+            background-color: #1d8c87;
+        }
+
+        .cart-total {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2AD3C9;
+            text-align: right;
+            margin-top: 15px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .cart .btn-checkout {
+            background-color: #2AD3C9;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart .btn-checkout:hover {
+            background-color: #1d8c87;
+        }
+
         #cart-count {
-        font-size: 0.75rem;
-        padding: 4px 6px;
+            font-size: 0.76rem;
+            padding: 4px 6px;
+
         }
 
     </style>
 </head>
 <body>
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -156,22 +279,25 @@
             </a>
             <div class="ms-auto d-flex align-items-center">
                 <div class="navbar-nav">
+                                  
                     <a href="/reservations/">Accueil</a>
                     <a href="/menu">Menu</a>
                 </div>
                 <a href="/reservations" class="btn btn-reserver">Réserver</a>
+
+                 <!-- Panier icon action -->
+                <div onclick="toggleCart()" class="ms-3 position-relative">
+                    <a href="#" class="text-decoration-none position-relative">
+                        <i class="fa fa-shopping-cart fa-lg" style="color: #2AD3C9;"></i>
+                        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            0
+                        </span>
+                    </a>
+                </div>
+                <!-- fin panier -->
             </div>
 
-            <!-- Panier icon action -->
-            <div class="ms-3 position-relative">
-                <a href="/cart" class="text-decoration-none position-relative">
-                    <i class="fa fa-shopping-cart fa-lg" style="color: #2AD3C9;"></i>
-                    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        0
-                    </span>
-                </a>
-            </div>
-            <!-- fin panier -->
+
         </div>
     </nav>
 
@@ -180,18 +306,75 @@
         <div class="menu-categories">
             <button onclick="showCategory('entrees')">Entrées</button>
             <button onclick="showCategory('plats')">Plats Principaux</button>
-            <button onclick="showCategory('pizzas')"> Pizzas & Pâtes</button>
+            <button onclick="showCategory('pizzas')">Pizzas & Pâtes</button>
             <button onclick="showCategory('burgers')">Burgers</button>
-            <button onclick="showCategory('salades')"> Salades Fraîcheur</button>
-            <button onclick="showCategory('desserts')"> Desserts Maison</button>
-            <button onclick="showCategory('boissons')"> Boissons & Vins</button>
+            <button onclick="showCategory('salades')">Salades Fraîcheur</button>
+            <button onclick="showCategory('desserts')">Desserts Maison</button>
+            <button onclick="showCategory('boissons')">Boissons & Vins</button>
         </div>
         <div class="menu-items" id="menu-items">
             <!-- Les articles du menu seront affichés ici -->
         </div>
     </div>
 
+    <!-- Panier -->
+    <div class="cart" id="cart">
+        <h4>Panier</h4>
+        <button onclick="toggleCart()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; color: #999; cursor: pointer;">
+           <i class="fas fa-times"></i>
+        </button>
+        <div id="cart-items"></div>
+        <div class="cart-total" id="cart-total">Total: 0€</div>
+        <button class="btn-checkout" onclick="checkout()">Valider la commande</button>
+    </div>
+
     <script>
+
+        //=======================>DEBUT ON LANDING PAGE <========================
+
+        const menuItemsContainer = document.getElementById("menu-items");
+
+        function renderItems(items) {
+            menuItemsContainer.innerHTML = ''; // Clear existing
+            items.forEach(item => {
+                const itemDiv = document.createElement("div");
+                itemDiv.classList.add("menu-item");
+                itemDiv.innerHTML = `
+                    <img src="${item.img}" alt="${item.name}">
+                        <h4>${item.name}</h4>
+                        <p>${item.description}</p>
+                        <p class="price"><strong>${item.price}</strong></p>
+                        <div class="quantity-container">
+                            <button onclick="decreaseQuantity('${item.name}')">-</button>
+                            <input type="number" value="1" id="quantity-${item.name}" min="1">
+                            <button onclick="increaseQuantity('${item.name}')">+</button>
+                        </div>
+                        <button class="btn-add" onclick="addToCart('${item.name}', '${item.price}', '${item.img}')">Ajouter au Panier</button>
+                     `;
+                menuItemsContainer.appendChild(itemDiv);
+            });
+        }
+
+        function showCategory(category) {
+            renderItems(menuData[category]);
+        }
+
+        // Merge all items from all categories
+        function getAllItems() {
+            return Object.values(menuData).flat();
+        }
+
+        // Load all items initially
+        window.onload = function() {
+            renderItems(getAllItems());
+        }
+
+
+        //=======================>FIN ON LANDING PAGE <========================
+
+
+        //=======================> DEBUT SUB CATEGORIES <========================
+
         const menuData = {
             entrees: [
                 {name: 'Soupe à l’oignon gratinée', description: 'Soupe d’oignons caramélisés, gratinée au fromage fondu', price: '7.50€', img: '/images/soupe.png'},
@@ -199,7 +382,7 @@
                 {name: 'Foie gras maison & chutney de figues', description: 'Foie gras maison servi avec un chutney de figues sucré', price: '12.90€', img: '/images/foie.jpg'}
             ],
             plats: [
-                {name: 'Entrecôte grillée & frites maison', description: 'Entrecôte savoureuse grillée, accompagnée dune sauce poivrée et de frites maison', price: '18.90€', img: '/images/entrecote.jpg'},
+                {name: 'Entrecôte grillée & frites maison', description: 'Entrecôte savoureuse grillée, accompagnée d’une sauce poivrée et de frites maison', price: '18.90€', img: '/images/entrecote.jpg'},
                 {name: 'Magret de canard & purée de patate', description: 'Magret de canard rôti, servi avec une onctueuse purée de patate douce.', price: '19.50€', img: '/images/magret.png'},
                 {name: 'Saumon rôti & légumes sautés', description: 'Saumon rôti, nappé d’une crème à l’estragon, accompagné de légumes sautés', price: '17.90€', img: '/images/saumon.jpg'},
                 {name: 'Risotto aux champignons ', description: 'Risotto crémeux aux champignons, relevé de parmesan râpé', price: '16.50€', img: '/images/risotto.jpg'}
@@ -230,48 +413,86 @@
             ]
         };
 
-        let cart = [];
+        const cart = [];
 
         function showCategory(category) {
             const itemsContainer = document.getElementById('menu-items');
-            itemsContainer.innerHTML = '';
-            menuData[category].forEach(item => {
-                itemsContainer.innerHTML += `
-                    <div class="menu-item">
-                        <img src="${item.img}" alt="${item.name}">
-                        <h4>${item.name}</h4>
-                        <p>${item.description}</p>
-                        <p class="price"><strong>${item.price}</strong></p>
-                        <div class="quantity-container">
-                            <button onclick="changeQuantity('${item.name}', -1)">-</button>
-                            <input type="text" id="quantity-${item.name}" value="1" readonly>
-                            <button onclick="changeQuantity('${item.name}', 1)">+</button>
+            itemsContainer.innerHTML = ''; // Effacer les éléments précédemment affichés
+            if (menuData[category]) {
+                menuData[category].forEach(item => {
+                    itemsContainer.innerHTML += `
+                        <div class="menu-item">
+                            <img src="${item.img}" alt="${item.name}">
+                            <h4>${item.name}</h4>
+                            <p>${item.description}</p>
+                            <p class="price"><strong>${item.price}</strong></p>
+                            <div class="quantity-container">
+                                <button onclick="decreaseQuantity('${item.name}')">-</button>
+                                <input type="number" value="1" id="quantity-${item.name}" min="1">
+                                <button onclick="increaseQuantity('${item.name}')">+</button>
+                            </div>
+                            <button class="btn-add" onclick="addToCart('${item.name}', '${item.price}', '${item.img}')">Ajouter au Panier</button>
                         </div>
-                        <button class="btn-add" onclick="addToCart('${item.name}', '${item.price}')">Ajouter</button>
+                    `;
+                });
+            }
+        }
+
+        function addToCart(name, price, img) {
+            const quantity = document.getElementById(`quantity-${name}`).value;
+            if (quantity > 0) {
+                const itemIndex = cart.findIndex(item => item.name === name);
+                if (itemIndex !== -1) {
+                    cart[itemIndex].quantity += parseInt(quantity);
+                } else {
+                    cart.push({name, price, img, quantity: parseInt(quantity)});
+                }
+                updateCart();
+                updateCartCount()
+            }
+        }
+
+        function decreaseQuantity(name) {
+            const quantityInput = document.getElementById(`quantity-${name}`);
+            let currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+            updateCart();
+            updateCartCount()
+        }
+
+        function increaseQuantity(name) {
+            const quantityInput = document.getElementById(`quantity-${name}`);
+            let currentValue = parseInt(quantityInput.value);
+            quantityInput.value = currentValue + 1;
+            updateCart();
+            updateCartCount()
+
+        }
+
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.quantity * parseFloat(item.price.replace('€', '').replace(',', '.'));
+                cartItemsContainer.innerHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-name">
+                            <strong>${item.name}</strong><br>
+                            ${item.quantity} x ${item.price}
+                        </div>
+                        <div class="cart-item-actions">
+                            <button class="btn-remove" onclick="removeFromCart('${item.name}')">🗑️</button>
+                            <button class="btn-increase" onclick="increaseCartQuantity('${item.name}')">+</button>
+                            <button class="btn-decrease" onclick="decreaseCartQuantity('${item.name}')">-</button>
+                        </div>
                     </div>
                 `;
             });
-        }
-
-        function changeQuantity(itemName, delta) {
-            const quantityInput = document.getElementById(`quantity-${itemName}`);
-            let currentQuantity = parseInt(quantityInput.value);
-            if (currentQuantity + delta > 0) {
-                quantityInput.value = currentQuantity + delta;
-            }
-        }
-
-
-        // add item to cart
-        function addToCart(name, price) {
-            const quantity = parseInt(document.getElementById(`quantity-${name}`).value);
-            const existingItem = cart.find(i => i.name === name);
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({ name, price, quantity });
-            }
-            updateCartCount(); 
+            document.getElementById('cart-total').innerHTML = `Total: ${total.toFixed(2)}€`;
+            document.getElementById('cart').style.display = cart.length > 0 ? 'block' : 'none';
         }
 
         function updateCartCount() {
@@ -279,6 +500,68 @@
             document.getElementById('cart-count').innerText = totalQuantity;
         }
 
+        function removeFromCart(name) {
+            const index = cart.findIndex(item => item.name === name);
+            if (index !== -1) {
+                cart.splice(index, 1);
+                updateCart();
+                updateCartCount()
+            }
+        }
+
+        function increaseCartQuantity(name) {
+            const itemIndex = cart.findIndex(item => item.name === name);
+            if (itemIndex !== -1) {
+                cart[itemIndex].quantity++;
+                updateCart();
+                updateCartCount()
+            }
+        }
+
+        function decreaseCartQuantity(name) {
+            const itemIndex = cart.findIndex(item => item.name === name);
+            if (itemIndex !== -1 && cart[itemIndex].quantity > 1) {
+                cart[itemIndex].quantity--;
+                updateCart();
+                updateCartCount()
+            }
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Votre panier est vide!');
+                return;
+
+            }
+          
+            // Sauvegarde du panier dans le localStorage
+            localStorage.setItem('panier', JSON.stringify(cart));
+
+            // Redirection vers la page validation.html
+            window.location.href = 'validation.html';
+        }
+
+
+        function toggleCart() {
+            const cartDiv = document.getElementById('cart');
+            cartDiv.style.display = cartDiv.style.display === 'none' || cartDiv.style.display === '' ? 'block' : 'none';
+        }
+
+
+
+        // On landing menu page
+
+
+
+        
+
+
     </script>
+
+
+
+
+
 </body>
 </html>
+
