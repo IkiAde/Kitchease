@@ -10,8 +10,6 @@
             font-family: 'Arial', sans-serif;
             background-color: #f7f7f7;
         }
-        
-        /* A test in the code */
 
         /* Navbar */
         .navbar {
@@ -277,7 +275,9 @@
         <form action="/reservations/available-times" method="GET" class="d-flex flex-wrap gap-3 justify-content-center">
             <div>
                 <i class="fa fa-calendar-alt"></i>
-                <input type="date" class="form-control" id="date" name="date" required th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                <input type="date" class="form-control" id="date" name="date" required 
+                    th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                    min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
             </div>
             <div>
                 <i class="fa fa-users"></i>
@@ -307,8 +307,25 @@
 </div>
 
     <script>
-        // Pour afficher la date actuelle par défaut
-        document.getElementById('date').valueAsDate = new Date();
+        // Pour afficher la date actuelle par défaut et empêcher les dates passées
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('date');
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Janvier = 0
+            const yyyy = today.getFullYear();
+            const todayFormatted = yyyy + '-' + mm + '-' + dd;
+            
+            dateInput.valueAsDate = today;
+            dateInput.min = todayFormatted;
+            
+            // Empêcher la modification manuelle vers une date antérieure
+            dateInput.addEventListener('change', function() {
+                if (this.value < todayFormatted) {
+                    this.value = todayFormatted;
+                }
+            });
+        });
     </script>
 </body>
 </html>
