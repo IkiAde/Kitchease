@@ -500,6 +500,13 @@
         function increaseQuantity(name) {
             const quantityInput = document.getElementById(`quantity-${name}`);
             let currentValue = parseInt(quantityInput.value);
+
+            if (currentValue < 10) { // Limite à 10 par plat
+                quantityInput.value = currentValue + 1;
+            }
+            updateCart();
+            updateCartCount();
+            
             quantityInput.value = currentValue + 1;
         }
 
