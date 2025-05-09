@@ -36,6 +36,11 @@ public class ReservationController {
             @RequestParam("nombrePersonnes") int nombrePersonnes,
             Model model) {
 
+        // Vérifier que la date n'est pas dans le passé
+        if (date.isBefore(LocalDate.now())) {
+            date = LocalDate.now(); // Corriger automatiquement à la date du jour
+        }
+
         List<LocalTime> availableTimes = reservationService.getAvailableTimes(date, nombrePersonnes);
         model.addAttribute("date", date);
         model.addAttribute("nombrePersonnes", nombrePersonnes);
