@@ -242,6 +242,46 @@
 		        font-size: 0.9rem;
 		    }
         }
+
+        /* Footer Styles */
+        .site-footer {
+            background-color: #2AD3C9; /* KitchEase green */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .site-footer .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .site-footer a {
+            color: white;
+            text-decoration: underline;
+            margin: 0 10px;
+            font-weight: 500;
+        }
+
+        .site-footer a:hover {
+            color: #e0f7f6;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .site-footer p {
+                font-size: 0.9rem;
+            }
+
+            .site-footer a {
+                display: block;
+                margin: 5px 0;
+            }
+        }
+        /* fin Footer Styles */
+
     </style>
 </head>
 <body>
@@ -251,7 +291,9 @@
             <a class="navbar-brand" href="#">
                 <img th:src="@{/images/logo.jpg}" alt="Logo">
                 <strong>KitchEase</strong>
+               
             </a>
+            
             <div class="ms-auto d-flex align-items-center">
                 <div class="navbar-nav">
                     <a href="/reservations/">Accueil</a>
@@ -298,13 +340,30 @@
 
     <!-- Section pour afficher les horaires disponibles -->
     <div th:if="${availableTimes != null}" class="available-times">
-    <h3>Horaires disponibles</h3>
-    <ul>
-        <li th:each="time : ${availableTimes}">
-            <a th:href="@{/reservations/new-reservation(date=${date}, heure=${time}, nombrePersonnes=${nombrePersonnes})}" th:text="${time}"></a>
-        </li>
-    </ul>
-</div>
+        <h3>Horaires disponibles</h3>
+        <ul>
+            <li th:each="time : ${availableTimes}">
+                <a th:href="@{/reservations/new-reservation(date=${date}, heure=${time}, nombrePersonnes=${nombrePersonnes})}" th:text="${time}"></a>
+            </li>
+        </ul>
+    </div>
+
+
+    <!-- section employee login -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Author: KitchEase</p>
+            <p>
+                <a href="mailto:kitchEase@example.com">kitchEase@example.com</a> | 
+                
+                <!-- backOffice redirection -->
+                <a href="/back-office/home">Internal Login</a> 
+                
+            </p>
+        </div>
+    </footer>
+    <!-- fin section -->
+
 
     <script>
         // Pour afficher la date actuelle par défaut et empêcher les dates passées

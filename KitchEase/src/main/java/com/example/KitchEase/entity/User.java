@@ -2,9 +2,10 @@ package com.example.KitchEase.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-
+@Table(name = "users")
 public class User {
     
 
@@ -18,19 +19,42 @@ public class User {
     private String email;
     private String password;
 
+    private String unit;
+    private String access;
 
-    public User(){
 
-    }
-
-    public User(String userName, String firstName, String lastName, String email, String password) {
+    public User(String userName, String firstName, String lastName, String email, String password, String unit,
+            String access) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.unit = unit;
+        this.access = access;
     }
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getAccess() {
+        return access;
+    }
+
+    public void setAccess(String access) {
+        this.access = access;
+    }
+
+    public User(){
+
+    }
+
+   
     public String getFirstName() {
         return firstName;
     }
