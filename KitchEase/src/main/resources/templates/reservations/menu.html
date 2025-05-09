@@ -476,7 +476,11 @@
         const cart = [];
 
         function addToCart(name, price, img) {
-            const quantity = document.getElementById(`quantity-${name}`).value;
+            const quantity = parseInt(document.getElementById(`quantity-${name}`).value);
+            if (quantity <= 0 || quantity > 10) {
+                alert('La quantité doit être entre 1 et 10 pour chaque plat');
+                return;
+            }
             if (quantity > 0) {
                 const itemIndex = cart.findIndex(item => item.name === name);
                 if (itemIndex !== -1) {
@@ -506,7 +510,7 @@
             }
             updateCart();
             updateCartCount();
-            
+
             quantityInput.value = currentValue + 1;
         }
 
