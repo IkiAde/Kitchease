@@ -178,10 +178,52 @@
             </div>
             <div class="mb-3">
                 <label for="telephone" class="form-label">Téléphone</label>
-                <input type="tel" class="form-control" id="telephone" name="telephone" required>
+                <input type="tel" class="form-control" id="telephone" name="telephone" 
+                       pattern="(\+33|0)[1-9]([ .-]?[0-9]{2}){4}" 
+                       title="Format français requis: +33 X XX XX XX XX ou 0X XX XX XX XX"
+                       maxlength="14" required>
             </div>
             <button type="submit" class="btn-confirmation">Confirmer la réservation</button>
         </form>
     </div>
+
+    <script>
+        document.getElementById('telephone').addEventListener('input', function(e) {
+            // Supprimer tous les caractères non numériques
+            let value = this.value.replace(/\D/g, '');
+            
+            // Formater selon la longueur
+            if (value.startsWith('33')) {
+                value = '+' + value;
+            } else if (!value.startsWith('0') && !value.startsWith('+33')) {
+                value = '0' + value;
+            }
+            
+            // Limiter la longueur
+            if (value.startsWith('+33') && value.length > 12) {
+                value = value.substring(0, 12);
+            } else if (value.startsWith('0') && value.length > 10) {
+                value = value.substring(0, 10);
+            }
+            
+            // Ajouter les espaces pour le formatage
+            let formatted = '';
+            if (value.startsWith('+33')) {
+                formatted = '+33 ' + value.substring(3);
+                if (formatted.length > 4) formatted = formatted.substring(0, 4) + ' ' + formatted.substring(4);
+                if (formatted.length > 7) formatted = formatted.substring(0, 7) + ' ' + formatted.substring(7);
+                if (formatted.length > 10) formatted = formatted.substring(0, 10) + ' ' + formatted.substring(10);
+                if (formatted.length > 13) formatted = formatted.substring(0, 13) + ' ' + formatted.substring(13);
+            } else if (value.startsWith('0')) {
+                formatted = value.substring(0, 2);
+                if (value.length > 2) formatted += ' ' + value.substring(2, 4);
+                if (value.length > 4) formatted += ' ' + value.substring(4, 6);
+                if (value.length > 6) formatted += ' ' + value.substring(6, 8);
+                if (value.length > 8) formatted += ' ' + value.substring(8, 10);
+            }
+            
+            this.value = formatted;
+        });
+    </script>
 </body>
 </html>

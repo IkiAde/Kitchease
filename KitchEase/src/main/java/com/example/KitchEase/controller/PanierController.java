@@ -16,6 +16,9 @@ public class PanierController {
 
     @PostMapping("/ajouter")
     public void ajouterArticle(@RequestBody PanierItem item, HttpSession session) {
+        if (item.getQuantite() <= 0 || item.getQuantite() > 10) {
+            throw new IllegalArgumentException("La quantité doit être entre 1 et 10");
+        }
         Panier panier = (Panier) session.getAttribute("panier");
         if (panier == null) {
             panier = new Panier();
