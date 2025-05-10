@@ -1,5 +1,8 @@
 package GestionKitchease.gestKitchease.service;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class PlatService implements PlatInterface{
 
 	@Override
