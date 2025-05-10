@@ -16,7 +16,7 @@ public class TableRestaurantService {
 	 	@Autowired
 	    private TableRestaurantRepository tableRepository;
 
-	    @Transactional
+	   /* @Transactional
 	    public void createRandomTables(int numberOfTables) {
 	        Random random = new Random();
 	        for (int i = 0; i < numberOfTables; i++) {
@@ -24,5 +24,5 @@ public class TableRestaurantService {
 	            TableRestaurant table = new TableRestaurant(capacite);
 	            tableRepository.save(table);
 	        }
-	    }
+	    }*/
 }
