@@ -24,22 +24,27 @@ public class UserService implements UserInterface {
 
 
    
-    public Optional<User> findById(String userName) {
-        return userRepo.findById(userName);
+    public Optional<User> findById(String userId) {
+        return userRepo.findById(userId);
+    }
+    
+    public Optional<User> findByUserName(String userName) {
+        return userRepo.findByUserName(userName);
     }
 
-    public boolean existsById(String userName) {
-       return userRepo.existsById(userName);
+    public boolean existsById(String userId) {
+       return userRepo.existsById(userId);
     }
 
     @Override
-    public void deleteById(String userName) {
-        userRepo.deleteById(userName);
+    public void deleteById(String userId) {
+        userRepo.deleteById(userId);
     }
 
     public Iterable<User> findAllUsers() {
        return userRepo.findAll();
     }
+
 
 
 

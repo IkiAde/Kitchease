@@ -1,18 +1,21 @@
 package com.example.KitchEase.entity;
 
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "users")
+@Table(name = "employee")
 public class User {
     
 
     @Id
-    private String userName;
+    @GeneratedValue
+    private Long userId;
 
-    
+    private String userName;
+   
     private String firstName;
     private String lastName;
     
@@ -22,9 +25,12 @@ public class User {
     private String unit;
     private String access;
 
+    public User() {
+    }
 
-    public User(String userName, String firstName, String lastName, String email, String password, String unit,
-            String access) {
+
+    public User(String userName, String firstName, String lastName, String email, String password,
+        String unit, String access) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,27 +40,16 @@ public class User {
         this.access = access;
     }
 
-    public String getUnit() {
-        return unit;
+    public Long getUserId() {
+        return userId;
     }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
+  
+    public String getUserName() {
+        return userName;
     }
-
-    public String getAccess() {
-        return access;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
-
-    public void setAccess(String access) {
-        this.access = access;
-    }
-
-    public User(){
-
-    }
-
-   
     public String getFirstName() {
         return firstName;
     }
@@ -66,12 +61,6 @@ public class User {
     }
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-    public String getUserName() {
-        return userName;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
     public String getEmail() {
         return email;
@@ -85,5 +74,20 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+    public String getUnit() {
+        return unit;
+    }
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+    public String getAccess() {
+        return access;
+    }
+    public void setAccess(String access) {
+        this.access = access;
+    }
+
+
+
 
 }
