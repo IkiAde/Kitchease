@@ -1,11 +1,10 @@
-package com.example.KitchEase.Interface;
+package GestionKitchease.gestKitchease.Interface;
 import java.util.Optional;
-import com.example.KitchEase.entity.User;
 
-public interface UserInterface {
+public interface EmployeeInterface {
 
     void createUser(String userName, String firstName, String lastName, String email, String password, String unit, String access);
-    void deleteById(String userName);
+    void deleteById(String employeeId);
 
 
 }

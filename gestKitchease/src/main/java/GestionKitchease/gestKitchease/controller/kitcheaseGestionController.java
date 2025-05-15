@@ -49,4 +49,18 @@ public class kitcheaseGestionController {
 	    platService.supprimerPlat(null);
 	    return new RedirectView("");
 	}
+
+
+	@GetMapping("/usermanagement")
+    public ModelAndView usermanagement() {
+        return new ModelAndView("kitcheaseGestion/usermanagement");
+        // landing page view usermanagement.html
+    }
+
+    @GetMapping("/stockmanagement")
+    public ModelAndView stockmanagement() {
+        return new ModelAndView("kitcheaseGestion/stockmanagement"); 
+        // landing page view stockmanagement.html
+    }
+
 }
