@@ -3,8 +3,10 @@ package com.example.KitchEase.Dto;
 import java.time.*;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotNull;
 
 public class ReservationRequest {
@@ -16,6 +18,7 @@ public class ReservationRequest {
     private String email;
 
     @NotBlank(message = "Le téléphone est obligatoire")
+    @Pattern(regexp = "^(\\+33|0)[1-9](\\d{2}){4}$", message = "Le téléphone doit être au format français (ex: +33 X XX XX XX XX ou 0X XX XX XX XX)")
     private String telephone;
 
     @NotNull(message = "La date est obligatoire")
@@ -25,6 +28,7 @@ public class ReservationRequest {
     private LocalTime heure;
 
     @Min(value = 1, message = "Le nombre de personnes doit être au moins 1")
+    @Max(value = 8, message = "Le nombre de personnes ne peut pas dépasser 8")
     private int nombrePersonnes;
 
     
@@ -49,7 +53,9 @@ public class ReservationRequest {
     }
 
     public void setTelephone(String telephone) {
-        this.telephone = telephone;
+        // Normalisation du numéro
+        this.telephone = telephone.replaceAll("\\s+", "") // Supprime les espaces
+                                 .replaceAll("^0", "+33"); // Remplace le 0 initial par +33
     }
 
     public LocalDate getDate() {
