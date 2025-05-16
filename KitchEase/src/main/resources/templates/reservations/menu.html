@@ -476,11 +476,7 @@
         const cart = [];
 
         function addToCart(name, price, img) {
-            const quantity = parseInt(document.getElementById(`quantity-${name}`).value);
-            if (quantity <= 0 || quantity > 10) {
-                alert('La quantité doit être entre 1 et 10 pour chaque plat');
-                return;
-            }
+            const quantity = document.getElementById(`quantity-${name}`).value;
             if (quantity > 0) {
                 const itemIndex = cart.findIndex(item => item.name === name);
                 if (itemIndex !== -1) {
@@ -504,13 +500,6 @@
         function increaseQuantity(name) {
             const quantityInput = document.getElementById(`quantity-${name}`);
             let currentValue = parseInt(quantityInput.value);
-
-            if (currentValue < 10) { // Limite à 10 par plat
-                quantityInput.value = currentValue + 1;
-            }
-            updateCart();
-            updateCartCount();
-
             quantityInput.value = currentValue + 1;
         }
 
