@@ -45,8 +45,8 @@ public class UserController {
         if(userService.existsById(username)){
             redirectAttributes.addFlashAttribute("errorMessage","Ce compte existe deja!");
             System.out.println("----------------------------------------------------------------");
-            System.out.println("==========> Email already exist  " + email);
-            return new RedirectView("/back-office/usermanagement");
+            System.out.println("==========> Email already exist  " + username);
+            return new RedirectView("/kitcheaseGestion/usermanagement");
         }
 
         userService.createUser(username, firstname, lastname, email, password, unit, access);
@@ -56,6 +56,13 @@ public class UserController {
         return new RedirectView("/user/userManagement");
     }
 
+
+    @GetMapping("/createUser")
+    public ModelAndView createUserForm(Model model) {
+        // Check if the user is logged in
+        return new ModelAndView("/kitcheaseGestion/userManagement");
+    }
+
     @PostMapping("/login")
 	public ModelAndView login(
 		@RequestParam String username,
@@ -63,17 +70,18 @@ public class UserController {
 		Model model,
 		HttpSession session) {
 			
-		Optional<User> usr = userService.findById(username);
+		Optional<User> usr = userService.findByUserName(username);
 
 
 		if(usr.isEmpty()) {
 			model.addAttribute("error","username or password incorrect");
-			return new ModelAndView("/back-office/home");
+			return new ModelAndView("/kitcheaseGestion/home");
 		}
 		else {
 
 			if(usr.isPresent() && usr.get().getPassword().equals(password)) {
-			
+                
+                session.setAttribute("user_id", usr.get().getUserId());
 				session.setAttribute("user_name", usr.get().getUserName());
 				session.setAttribute("user_prenom", usr.get().getFirstName());
 	
@@ -88,7 +96,7 @@ public class UserController {
 			}
 			else {
 				model.addAttribute("error","Email or password incorrect");
-				return new ModelAndView("/back-office/home");
+				return new ModelAndView("/kitcheaseGestion/home");
 			
 			}
 		}
@@ -102,13 +110,13 @@ public class UserController {
 
         // Check if the user is logged in
         if (session.getAttribute("user_name") == null) {
-            return new ModelAndView("redirect:/back-office/home"); // Redirect to login page if not logged in
+            return new ModelAndView("redirect:/kitcheaseGestion/home"); // Redirect to login page if not logged in
         }
 
         Iterable<User> user = userService.findAllUsers();
         Map<String, Object> model = Map.of("user", user);
 
-        return new ModelAndView("/back-office/userManagement", model); // Return the user management view with the user data
+        return new ModelAndView("/kitcheaseGestion/userManagement", model); // Return the user management view with the user data
     }
 
     //logout section
@@ -116,7 +124,7 @@ public class UserController {
 	
     public RedirectView logout(HttpSession session) {
         session.invalidate();
-        return new RedirectView("back-office/home"); 
+        return new RedirectView("kitcheaseGestion/home"); 
     }
 
     
