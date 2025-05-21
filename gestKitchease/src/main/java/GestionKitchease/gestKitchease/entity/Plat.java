@@ -18,17 +18,11 @@ public class Plat {
 	    private String description;
 	    
 	    @Lob
-	    @Column(columnDefinition = "BYTEA") // Spécifique à MySQL/Supabase
+	    @Column(name = "image_data")
 	    private byte[] imageData;
 	    
 	    private String imageContentType; 
 
-	   /* public Plat(String nom, Double prix, String description, String imageUrl) {
-	        this.nom = nom;
-	        this.prix = prix;
-	        this.description = description;
-	        
-	    }*/
 	    
 	    public Plat(){};
 	    

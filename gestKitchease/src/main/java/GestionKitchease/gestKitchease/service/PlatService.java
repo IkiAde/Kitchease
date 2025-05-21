@@ -1,12 +1,12 @@
 package GestionKitchease.gestKitchease.service;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.*;
 import GestionKitchease.gestKitchease.entity.Plat;
 import GestionKitchease.gestKitchease.repository.PlatRepository;
 
@@ -64,6 +64,10 @@ public class PlatService implements PlatInterface{
 	public Plat getPlatById(Long id) {
 	
 		return this.platRepo.findById(id).get();
+	}
+
+	public List<Plat> getAllPlats() {
+		return (List<Plat>) this.platRepo.findAll();
 	}
 
 }

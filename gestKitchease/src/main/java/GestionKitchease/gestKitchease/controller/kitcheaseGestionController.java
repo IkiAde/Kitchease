@@ -1,6 +1,7 @@
 package GestionKitchease.gestKitchease.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,19 +44,23 @@ public class kitcheaseGestionController {
 	
 	@GetMapping("/creation")
 	public ModelAndView creation(Model model) {
-		
+		List<Plat> plats= platService.getAllPlats();
+		model.addAttribute("plats", plats);
 	    return new ModelAndView("kitcheaseGestion/creation"); 
 	}
 	
 	
 	@PostMapping("/creerPlat")
-	public RedirectView creerPlat(@RequestParam String nom,
-								  @RequestParam double prix, 
-								  @RequestParam String description, 
-								  @RequestPart MultipartFile image ) throws IOException {
+	public RedirectView creerPlat(@RequestParam("nom") String nom,
+            @RequestParam("prix") double prix, 
+            @RequestParam("description") String description, 
+            @RequestParam("image") MultipartFile image, Model model ) throws IOException {
 
 	    platService.creerPlat(nom, prix, description, image);
-	    return new RedirectView("kitcheaseGestion/creation");
+	    List<Plat> plats= platService.getAllPlats();
+	    model.addAttribute("plats", plats);
+	    model.addAttribute("success", "Le plat a été créé avec succès!");
+	    return new RedirectView("/kitcheaseGestion/creation");
 	}
 	
 	@GetMapping("/{id}/image")
