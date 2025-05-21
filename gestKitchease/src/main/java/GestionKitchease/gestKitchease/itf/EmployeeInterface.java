@@ -1,4 +1,4 @@
-package GestionKitchease.gestKitchease.Interface;
+package GestionKitchease.gestKitchease.itf;
 import java.util.Optional;
 
 public interface EmployeeInterface {

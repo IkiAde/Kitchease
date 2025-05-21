@@ -1,14 +1,24 @@
 package GestionKitchease.gestKitchease.controller;
 
+import java.io.IOException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import GestionKitchease.gestKitchease.entity.Plat;
 import GestionKitchease.gestKitchease.service.PlatService;
 
 @Controller
@@ -31,12 +41,30 @@ public class kitcheaseGestionController {
 	    return new ModelAndView("kitcheaseGestion/actions"); 
 	}
 	
+	@GetMapping("/creation")
+	public ModelAndView creation(Model model) {
+		
+	    return new ModelAndView("kitcheaseGestion/creation"); 
+	}
+	
 	
 	@PostMapping("/creerPlat")
-	public RedirectView creerPlat() {
-	    platService.creerPlat(null, null, null, null, 0);
-	    return new RedirectView("");
+	public RedirectView creerPlat(@RequestParam String nom,
+								  @RequestParam double prix, 
+								  @RequestParam String description, 
+								  @RequestPart MultipartFile image ) throws IOException {
+
+	    platService.creerPlat(nom, prix, description, image);
+	    return new RedirectView("kitcheaseGestion/creation");
 	}
+	
+	@GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
+        Plat plat = platService.getPlatById(id);
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(plat.getImageContentType()))
+            .body(plat.getImageData());
+    }
 	
 	@PostMapping("/modifierPlat")
 	public RedirectView modifierPlat() {

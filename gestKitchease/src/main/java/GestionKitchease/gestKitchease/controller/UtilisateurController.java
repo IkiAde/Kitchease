@@ -1,4 +1,4 @@
-package com.example.KitchEase.controller;
+/*package GestionKitchease.gestKitchease.controller;
 import java.util.Map;
 import java.util.Optional;
 
@@ -12,19 +12,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-
-import com.example.KitchEase.entity.User;
-import com.example.KitchEase.service.UserService;
-
+import GestionKitchease.gestKitchease.service.*;
+import GestionKitchease.gestKitchease.entity.*;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
 
-public class UserController {
+public class UtilisateurController {
     
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UtilisateurService userService;
 
     @PostMapping("/createUser")
     public RedirectView createUser(
@@ -70,7 +68,7 @@ public class UserController {
 		Model model,
 		HttpSession session) {
 			
-		Optional<User> usr = userService.findByUserName(username);
+		Optional<Utilisateur> usr = userService.findByUserName(username);
 
 
 		if(usr.isEmpty()) {
@@ -113,7 +111,7 @@ public class UserController {
             return new ModelAndView("redirect:/kitcheaseGestion/home"); // Redirect to login page if not logged in
         }
 
-        Iterable<User> user = userService.findAllUsers();
+        Iterable<Utilisateur> user = userService.findAllUsers();
         Map<String, Object> model = Map.of("user", user);
 
         return new ModelAndView("/kitcheaseGestion/userManagement", model); // Return the user management view with the user data
@@ -129,4 +127,4 @@ public class UserController {
 
     
    
-}
+}*/

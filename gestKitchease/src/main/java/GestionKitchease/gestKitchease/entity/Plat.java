@@ -1,45 +1,52 @@
 package GestionKitchease.gestKitchease.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 
 @Entity
 public class Plat {
 	
-	    public int getQuantite() {
-		return quantite;
-	}
 
-	public void setQuantite(int quantite) {
-		this.quantite = quantite;
-	}
-
-	public Long getIdPlat() {
-		return idPlat;
-	}
+	
 
 		private String nom;
 	    private Double prix;
 	    private String description;
-	    private int quantite;
-	    private String imageUrl; 
+	    
+	    @Lob
+	    @Column(columnDefinition = "BYTEA") // Spécifique à MySQL/Supabase
+	    private byte[] imageData;
+	    
+	    private String imageContentType; 
 
-	    public Plat(String nom, Double prix, String description, int quantite, String imageUrl) {
+	   /* public Plat(String nom, Double prix, String description, String imageUrl) {
 	        this.nom = nom;
 	        this.prix = prix;
 	        this.description = description;
-	        this.quantite= quantite;
-	        this.imageUrl = imageUrl;
-	    }
+	        
+	    }*/
 	    
 	    public Plat(){};
 	    
-	    @Id
+	    public byte[] getImageData() {
+			return imageData;
+		}
+
+		public void setImageData(byte[] imageData) {
+			this.imageData = imageData;
+		}
+
+		@Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long idPlat;
 
+	    public Long getIdPlat() {
+			return idPlat;
+		}
 	    
 	    public String getNom() {
 	        return nom;
@@ -65,12 +72,13 @@ public class Plat {
 	        this.description = description;
 	    }
 
-	    public String getImageUrl() {
-	        return imageUrl;
-	    }
 
-	    public void setImageUrl(String imageUrl) {
-	        this.imageUrl = imageUrl;
-	    }
+		public String getImageContentType() {
+			return imageContentType;
+		}
+
+		public void setImageContentType(String imageContentType) {
+			this.imageContentType = imageContentType;
+		}
 }
 

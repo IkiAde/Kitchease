@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import GestionKitchease.gestKitchease.entity.Employee;
 import GestionKitchease.gestKitchease.repository.EmployeeRepository;
-import	GestionKitchease.gestKitchease.Interface.EmployeeInterface;
+import	GestionKitchease.gestKitchease.itf.EmployeeInterface;
 
 
 @Service
