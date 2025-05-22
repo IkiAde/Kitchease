@@ -80,9 +80,13 @@
 
     <div class="login-container">
         <h2>Connexion Back Office</h2>
+        
+        <p th:if="${error}" class="message error" th:text="${error}"></p>
+        <p th:if="${errorNotActive}" class="message error" th:text="${errorNotActive}"></p>
+
         <form action="/user/login" method="post">
-            <label for="username">Nom d'utilisateur</label>
-            <input type="text" id="username" name="username" required />
+            <label for="userName">Nom d'utilisateur</label>
+            <input type="text" id="userName" name="userName" required />
 
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="password" required />
