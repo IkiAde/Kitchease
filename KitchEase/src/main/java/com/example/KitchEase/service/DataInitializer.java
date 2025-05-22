@@ -13,6 +13,6 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Crée 10 tables avec des capacités aléatoires
-        tableInitializationService.createRandomTables(10);
+        //tableInitializationService.createRandomTables(10);
     }
 }
