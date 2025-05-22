@@ -16,18 +16,6 @@ import java.util.Optional;
 public class PanierController {
 
     @PostMapping("/ajouter")
-<<<<<<< HEAD
-    public void ajouterArticle(@RequestBody PanierItem item, HttpSession session) {
-        if (item.getQuantite() <= 0 || item.getQuantite() > 10) {
-            throw new IllegalArgumentException("La quantité doit être entre 1 et 10");
-        }
-        Panier panier = (Panier) session.getAttribute("panier");
-        if (panier == null) {
-            panier = new Panier();
-            session.setAttribute("panier", panier);
-        }
-        panier.addItem(item);
-=======
     public ResponseEntity<String> ajouterArticles(@RequestBody List<PanierItem> items, HttpSession session) {
         Panier panier = getOrCreatePanier(session);
         
@@ -35,7 +23,6 @@ public class PanierController {
         panier.setItems(items);
         
         return ResponseEntity.ok("Panier mis à jour avec succès");
->>>>>>> 67d51517aeeee8df3c85d940132e75ed7dc637a9
     }
 
     @GetMapping("/recapitulatif")
