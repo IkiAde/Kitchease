@@ -1,6 +1,7 @@
 package GestionKitchease.gestKitchease.entity;
 
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -21,7 +22,7 @@ public class Employee {
     private String email;
     private String password;
 
-    private String unit;
+    private String status;
     private String access;
 
     public Employee() {
@@ -35,7 +36,7 @@ public class Employee {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.unit = unit;
+        this.status = unit;
         this.access = access;
     }
 
@@ -73,11 +74,11 @@ public class Employee {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getUnit() {
-        return unit;
+    public String getStatus() {
+        return status;
     }
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public void setStatus(String unit) {
+        this.status = unit;
     }
     public String getAccess() {
         return access;

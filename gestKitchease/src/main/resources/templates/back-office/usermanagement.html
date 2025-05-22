@@ -209,13 +209,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="user : ${user}">
-                <td th:text="${user.userName}">username</td>
-                <td th:text="${user.firstName}">firstname</td>
-                <td th:text="${user.lastName}">lastname</td>
-                <td th:text="${user.email}">email</td>
-                <td th:text="${user.unit}">unit</td>
-                <td th:text="${user.access}">access</td>
+            <tr th:each="employee : ${employeesList}">
+                <td th:text="${employee.userName}">username</td>
+                <td th:text="${employee.firstName}">firstname</td>
+                <td th:text="${employee.lastName}">lastname</td>
+                <td th:text="${employee.email}">email</td>
+                <td th:text="${employee.unit}">unit</td>
+                <td th:text="${employee.access}">access</td>
             </tr>
         </tbody>
     </table>

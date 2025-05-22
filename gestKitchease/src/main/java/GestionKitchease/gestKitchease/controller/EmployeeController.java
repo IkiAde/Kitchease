@@ -1,11 +1,11 @@
 package GestionKitchease.gestKitchease.controller;
 import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +34,7 @@ public class EmployeeController {
     @RequestParam String lastname,
     @RequestParam String email,
     @RequestParam String password,
-    @RequestParam String unit,
+    @RequestParam String status,
     @RequestParam String access,
     RedirectAttributes redirectAttributes,
     HttpSession session) {
@@ -45,15 +45,18 @@ public class EmployeeController {
 
 
         // check if the email already exists in the database
-        if(employeeService.findByUserName(username) != null){
-            redirectAttributes.addFlashAttribute("errorMessage","Ce compte existe deja!");
-            System.out.println("----------------------------------------------------------------");
-            System.out.println("==========> Email already exist  " + username);
-            return new RedirectView("/kitcheaseGestion/usermanagement");
+        Optional<Employee> existingUser = employeeService.findByUserName(username);
+    
+
+        if (existingUser.isPresent()) {
+            redirectAttributes.addFlashAttribute("error", "Ce compte existe deja!");
+            System.out.println("==========> Username already exists: " + username);
+            return new RedirectView("/user/userManagement");
         }
 
-        employeeService.createUser(username, firstname, lastname, email, password, unit, access);
-        redirectAttributes.addFlashAttribute("creationOk", "Compte creer avec succes");
+
+        employeeService.createUser(username, firstname, lastname, email, password, status, access);
+        redirectAttributes.addFlashAttribute("success", "Compte creer avec succes");
 
 
         return new RedirectView("/user/userManagement");
@@ -68,13 +71,13 @@ public class EmployeeController {
 
     @PostMapping("/login")
 	public ModelAndView login(
-		@RequestParam String username,
+		@RequestParam String userName,
 		@RequestParam String password,
 		Model model,
 		HttpSession session) {
 			
-		Optional<Employee> usr = employeeService.findByUserName(username);
-
+		Optional<Employee> usr = employeeService.findByUserName(userName);
+            System.out.println("---------------------------------->>>>>>>>>>>>>>"+usr);
 
 		if(usr.isEmpty()) {
 			model.addAttribute("error","username or password incorrect");
@@ -84,18 +87,50 @@ public class EmployeeController {
 
 			if(usr.isPresent() && usr.get().getPassword().equals(password)) {
                 
-                session.setAttribute("user_id", usr.get().getEmployeeId());
-				session.setAttribute("user_name", usr.get().getUserName());
-				session.setAttribute("user_prenom", usr.get().getFirstName());
+                //Redirection upon user access type
+
+                var sessUserId= usr.get().getEmployeeId();
+                var sessUserName = usr.get().getUserName();
+                var sessUserFirstName = usr.get().getFirstName();
+                var sessUserLastName = usr.get().getLastName();
+                var sessUserAccess = usr.get().getAccess();
+                var sessUserStatus = usr.get().getStatus();
+                
+                session.setAttribute("sessUserId", sessUserId);
+                session.setAttribute("sessUserAccess", sessUserAccess);
+                session.setAttribute("sessUserName", sessUserName);
+                session.setAttribute("sessUserFirstName", sessUserFirstName);
+                session.setAttribute("sessUserLastName", sessUserLastName);
+                session.setAttribute("sessUserStatus", sessUserStatus);
+
+                if(sessUserStatus.equals("inactif")) {
+                    model.addAttribute("errorNotActive","Account is inactive! please contact the administrator");
+                    return new ModelAndView("/kitcheaseGestion/home");
+                   
+                }
+                else{
+
+                    // Redirect to the appropriate page based on user access level                   
+                    if (sessUserAccess.equals("admin")) {
+                        return new ModelAndView("redirect:/user/userManagement");
+                        //changement *******
+                    } else if (sessUserAccess.equals("serveur")) {
+
+                        return new ModelAndView("kitcheaseGestion/serveur/home");
+
+                    } else if (sessUserAccess.equals("cuisinier")) {
+
+                        return new ModelAndView("kitcheaseGestion/cuisinier/home");
+                        
+                    }else{
+                        
+                        model.addAttribute("error","Access not authorized");
+                        return new ModelAndView("/kitcheaseGestion/home");
+                    }
+
+                }
 	
-				model.addAttribute("success","Loggin successful");
-	
-				//printing user_name
-				System.out.println("----------------------------------------------------------------");
-				System.out.println("========> email logged in "+usr.get().getEmail());	
-	
-				//changement *******
-				return new ModelAndView("redirect:/user/userManagement");
+				
 			}
 			else {
 				model.addAttribute("error","Email or password incorrect");
@@ -112,15 +147,87 @@ public class EmployeeController {
        
 
         // Check if the user is logged in
-        if (session.getAttribute("user_name") == null) {
+        if (session.getAttribute("sessUserName") == null) {
             return new ModelAndView("redirect:/kitcheaseGestion/home"); // Redirect to login page if not logged in
         }
 
-        Iterable<Employee> user = employeeService.findAllEmployees();
-        Map<String, Object> model = Map.of("user", user);
+        Iterable<Employee> employee = employeeService.findAll();
+        Map<String, Object> model = Map.of("employeesList", employee);
 
-        return new ModelAndView("/kitcheaseGestion/userManagement", model); // Return the user management view with the user data
+        return new ModelAndView("/kitcheaseGestion/admin/usermanagement", model); // Return the admin user management view with the user data
     }
+
+
+    // delete section 
+
+    @GetMapping("/deleteEmployee/{employeeId}")
+    public RedirectView deleteEmployee(
+        @PathVariable Long employeeId,
+        HttpSession session
+    ){
+        
+        if(session.getAttribute("sessUserName") == null) {
+
+            return new RedirectView("/kitcheaseGestion/home"); // Redirect to login page if not logged in
+        }
+        else if( !session.getAttribute("sessUserAccess").equals("admin") ) {
+            // Check if the user is an admin
+            return new RedirectView("/kitcheaseGestion/home"); // Redirect to login page if not admin         }
+       
+        }
+
+        employeeService.deleteById(employeeId);
+        System.out.println("check ======> employeeId: In deleted employee " + employeeId);
+
+        return new RedirectView("/user/userManagement");
+    } 
+
+
+   @PostMapping("/updateEmployee/{employeeId}")
+    public RedirectView updateEmployee(
+        @PathVariable Long employeeId,
+        @RequestParam String firstName,  
+        @RequestParam String lastName,   
+        @RequestParam String userName,   
+        @RequestParam String email,
+        @RequestParam(required = false) String password,  //  optional for updates
+        @RequestParam String status,
+        @RequestParam String access,
+        HttpSession session,
+        RedirectAttributes redirectAttributes  
+    ) {
+        
+       
+        if(session.getAttribute("sessUserName") == null) {
+            return new RedirectView("/kitcheaseGestion/home");
+        }
+        
+   
+        if(!session.getAttribute("sessUserAccess").equals("admin")) {
+            return new RedirectView("/kitcheaseGestion/home");
+        }
+
+        try {
+           
+            employeeService.updateUser(employeeId, userName, firstName, lastName, email, password, status, access);
+            
+            System.out.println("Successfully updated employee with ID: " + employeeId);
+            
+        
+            redirectAttributes.addFlashAttribute("success", "Utilisateur modifié avec succès!");
+            
+        } catch (Exception e) {
+            System.err.println("Error updating employee: " + e.getMessage());
+            e.printStackTrace();
+            
+          
+            redirectAttributes.addFlashAttribute("error", "Erreur lors de la modification de l'utilisateur: " + e.getMessage());
+        }
+
+        return new RedirectView("/user/userManagement");
+    }
+
+
 
     //logout section
 	@PostMapping("/logout")
