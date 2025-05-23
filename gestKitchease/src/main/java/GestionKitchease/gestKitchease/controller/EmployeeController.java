@@ -63,6 +63,60 @@ public class EmployeeController {
     }
 
 
+
+    // create self registration form
+    @PostMapping("/Register")
+    public RedirectView createUser(
+    @RequestParam String firstname,
+    @RequestParam String lastname,
+    @RequestParam String email,
+    @RequestParam String password,
+    RedirectAttributes redirectAttributes,
+    HttpSession session) {
+
+        // create usernname format jane.doe
+        String username = firstname.toLowerCase() + "." + lastname.toLowerCase();
+        System.out.println("----------------------------------------------------------------" + username);
+
+
+        // check if the email already exists in the database
+        Optional<Employee> existingUser = employeeService.findByUserName(username);
+    
+
+        if (existingUser.isPresent()) {
+            redirectAttributes.addFlashAttribute("error", "Ce compte existe deja!");
+            System.out.println("==========> Username already exists: " + username);
+            return new RedirectView("/user/userManagement");
+        }
+
+
+        employeeService.createUser(username, firstname, lastname, email, password, "inactif", "");
+        redirectAttributes.addFlashAttribute("success", "Compte creer avec succes et en attente de validation par l'administrateur");
+
+
+        return new RedirectView("/user/attenteValidation");
+    }
+
+    
+    @GetMapping("/attenteValidation")
+    public ModelAndView attenteValidationForm(Model model) {
+        // Check if the user is logged in
+        if (model.getAttribute("sessUserName") == null) {
+            return new ModelAndView("redirect:/kitcheaseGestion/home"); // Redirect to login page if not logged in
+        }
+        return new ModelAndView("/kitcheaseGestion/user/attenteValidation");
+    }
+
+
+
+    // self registration  section
+    @GetMapping("/selfRegister")
+    public ModelAndView selfRegisterForm(Model model) {
+
+        return new ModelAndView("/kitcheaseGestion/selfRegister");
+    }
+
+
     @GetMapping("/employee")
     public ModelAndView createUserForm(Model model) {
       

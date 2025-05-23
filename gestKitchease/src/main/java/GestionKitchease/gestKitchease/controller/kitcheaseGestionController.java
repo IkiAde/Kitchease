@@ -75,4 +75,10 @@ public class kitcheaseGestionController {
         // landing page view usermanagement.html
     }
 
+	@GetMapping("/user/selfRegister")
+	public ModelAndView selfRegister() {
+		return new ModelAndView("kitcheaseGestion/user/selfRegister");
+		// landing page view selfRegister.html
+	}
+
 }
