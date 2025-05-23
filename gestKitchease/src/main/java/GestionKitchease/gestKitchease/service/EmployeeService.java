@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import GestionKitchease.gestKitchease.entity.Employee;
+import GestionKitchease.gestKitchease.interfaces.EmployeeInterface;
 import GestionKitchease.gestKitchease.repository.EmployeeRepository;
-import	GestionKitchease.gestKitchease.Interface.EmployeeInterface;
 
 
 @Service
