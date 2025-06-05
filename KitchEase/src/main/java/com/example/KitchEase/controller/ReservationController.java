@@ -29,6 +29,11 @@ public class ReservationController {
     public String showHomePage(Model model) {
         return "reservations/home"; // Chemin complet vers home.html
     }
+
+    @GetMapping("/back-office")
+    public String showBackOfficePage(Model model) {
+        return "redirect:http://localhost:8081/kitcheaseGestion/home"; // back office login home.html
+    }
       
     @GetMapping("/available-times")
     public String getAvailableTimes(

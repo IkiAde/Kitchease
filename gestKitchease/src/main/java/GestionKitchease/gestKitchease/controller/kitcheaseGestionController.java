@@ -51,16 +51,34 @@ public class kitcheaseGestionController {
 	}
 
 
-	@GetMapping("/usermanagement")
-    public ModelAndView usermanagement() {
-        return new ModelAndView("kitcheaseGestion/usermanagement");
-        // landing page view usermanagement.html
-    }
+	// @GetMapping("/usermanagement")
+    // public ModelAndView usermanagement() {
+    //     return new ModelAndView("kitcheaseGestion/usermanagement");
+    //     // landing page view usermanagement.html
+    // }
 
     @GetMapping("/stockmanagement")
     public ModelAndView stockmanagement() {
         return new ModelAndView("kitcheaseGestion/stockmanagement"); 
         // landing page view stockmanagement.html
     }
+
+	@GetMapping("/test")
+    public ModelAndView test() {
+        return new ModelAndView("kitcheaseGestion/test"); 
+        // landing page view test.html
+    }
+
+	@GetMapping("/admin/usermanagement")
+    public ModelAndView adminUsermanagement() {
+        return new ModelAndView("kitcheaseGestion/admin/usermanagement");
+        // landing page view usermanagement.html
+    }
+
+	@GetMapping("/user/selfRegister")
+	public ModelAndView selfRegister() {
+		return new ModelAndView("kitcheaseGestion/user/selfRegister");
+		// landing page view selfRegister.html
+	}
 
 }

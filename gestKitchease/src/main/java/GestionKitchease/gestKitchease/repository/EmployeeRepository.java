@@ -10,8 +10,7 @@ public interface EmployeeRepository extends CrudRepository<Employee, Long>{
     Optional<Employee> findByUserName(String userName);
   
     boolean existsById(Long employeeId);
-    void deleteById(Long employeeId);
-
+   
     Iterable<Employee> findAll();
     
 }
