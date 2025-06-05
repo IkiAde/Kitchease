@@ -11,7 +11,7 @@ public class PlatConsumer {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @KafkaListener(topics = "plats-topic", groupId = "reservation-group")
+    @KafkaListener(topics = "plats-updates", groupId = "reservation-group")
     public void consume(String message) {
         try {
             Plat plat = objectMapper.readValue(message, Plat.class);
