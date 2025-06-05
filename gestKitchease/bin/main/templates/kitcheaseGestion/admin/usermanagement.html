@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --success-green: #28a745;
@@ -12,6 +15,8 @@
             --sidebar-text: #ffffff;
             --main-bg: #f8f9fa;
             --border-color: #dee2e6;
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 70px;
         }
 
         * {
@@ -27,74 +32,243 @@
             min-height: 100vh;
         }
 
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: #1bb7af;
+            transform: scale(1.05);
+        }
+
+        /* Desktop Menu Toggle */
+        .menu-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--sidebar-text);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .menu-toggle:hover {
+            color: var(--primary-color);
+            transform: rotate(180deg);
+        }
+
         /* Sidebar Styles */
         .sidebar {
-            width: 250px;
-            background-color: var(--sidebar-bg);
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, var(--sidebar-bg) 0%, #2c3237 100%);
             color: var(--sidebar-text);
             padding: 20px 0;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px 20px;
+            border-bottom: 1px solid #495057;
+            margin-bottom: 20px;
+            position: relative;
         }
 
         .sidebar h2 {
             color: var(--sidebar-text);
-            padding: 0 20px 20px 20px;
             font-size: 24px;
-            border-bottom: 1px solid #495057;
-            margin-bottom: 20px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed h2 {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .greeting {
+            font-size: 14px;
+            color: #adb5bd;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .greeting {
+            opacity: 0;
+            transform: scale(0.8);
         }
 
         .sidebar ul {
             list-style: none;
+            padding: 0 10px;
         }
 
         .sidebar ul li {
-            padding: 12px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar ul li:hover {
-            background-color: #495057;
-        }
-
-        .sidebar ul li.active {
-            background-color: var(--primary-color);
+            margin-bottom: 8px;
+            transition: all 0.3s;
         }
 
         .sidebar ul li a {
             color: var(--sidebar-text);
             text-decoration: none;
-            display: block;
+            display: flex;
+            align-items: center;
+            padding: 15px 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar ul li a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: all 0.5s;
+        }
+
+        .sidebar ul li a:hover::before {
+            left: 100%;
+        }
+
+        .sidebar ul li a:hover,
+        .sidebar ul li.active a {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1bb7af 100%);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(42, 211, 201, 0.3);
+        }
+
+        .sidebar ul li a i {
+            width: 24px;
+            text-align: center;
+            margin-right: 15px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed ul li a i {
+            margin-right: 0;
+        }
+
+        .sidebar ul li a .nav-text {
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar.collapsed ul li a .nav-text {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        /* Tooltip for collapsed sidebar */
+        .sidebar.collapsed ul li a {
+            position: relative;
+            justify-content: center;
+        }
+
+        .sidebar.collapsed ul li a::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed ul li a:hover::after {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Main Content Styles */
         .main-content {
-            margin-left: 250px;
+            margin-left: var(--sidebar-width);
             padding: 30px;
             flex: 1;
             background-color: var(--main-bg);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .main-content.expanded {
+            margin-left: var(--sidebar-collapsed-width);
         }
 
         .page-header {
             margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         .page-header h1 {
             color: #333;
             font-size: 28px;
-            margin-bottom: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-header h1 i {
+            color: var(--primary-color);
+            font-size: 32px;
         }
 
         /* Form Styles */
         .form-container {
-            background-color: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
             margin-bottom: 30px;
+            border: 1px solid rgba(42, 211, 201, 0.1);
         }
 
         .form-row {
@@ -112,72 +286,90 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group label i {
+            color: var(--primary-color);
+            font-size: 16px;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
             font-size: 14px;
             background-color: white;
+            transition: all 0.3s ease;
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(42, 211, 201, 0.2);
+            box-shadow: 0 0 0 3px rgba(42, 211, 201, 0.1);
+            transform: translateY(-2px);
         }
 
         /* Button Styles */
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .btn-success {
-            background-color: var(--success-green);
+            background: linear-gradient(135deg, var(--success-green) 0%, #20c997 100%);
             color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
         }
 
         .btn-primary {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1bb7af 100%);
             color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #1bb7af;
         }
 
         .btn-warning {
-            background-color: #ffc107;
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
             color: #212529;
         }
 
-        .btn-warning:hover {
-            background-color: #e0a800;
-        }
-
         .btn-danger {
-            background-color: #dc3545;
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
             color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
         }
 
         .btn-sm {
@@ -187,10 +379,26 @@
 
         /* Table Styles */
         .table-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
             overflow: hidden;
+            border: 1px solid rgba(42, 211, 201, 0.1);
+        }
+
+        .table-header {
+            padding: 20px 25px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1bb7af 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
         }
 
         table {
@@ -202,128 +410,149 @@
             background-color: #f8f9fa;
             color: #333;
             font-weight: 600;
-            padding: 15px;
+            padding: 18px 15px;
             text-align: left;
             border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
         }
 
         td {
-            padding: 15px;
+            padding: 18px 15px;
             border-bottom: 1px solid var(--border-color);
             color: #333;
         }
 
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+
         tbody tr:hover {
             background-color: #f8f9fa;
+            transform: scale(1.01);
         }
 
         /* Message Styles */
         .message {
-            padding: 12px 16px;
-            border-radius: 5px;
+            padding: 15px 20px;
+            border-radius: 10px;
             margin-bottom: 20px;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .message i {
+            font-size: 18px;
         }
 
         .message.success {
-            background-color: #d4edda;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
             color: #155724;
-            border: 1px solid #c3e6cb;
+            border-left: 4px solid #28a745;
         }
 
         .message.error {
-            background-color: #f8d7da;
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
             color: #721c24;
-            border: 1px solid #f5c6cb;
+            border-left: 4px solid #dc3545;
         }
 
         /* Action buttons in table */
         .action-buttons {
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 30px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+            margin: 3% auto;
+            padding: 35px;
+            border-radius: 20px;
             width: 90%;
             max-width: 600px;
             position: relative;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 1px solid rgba(42, 211, 201, 0.2);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .close {
             position: absolute;
-            right: 15px;
-            top: 15px;
+            right: 20px;
+            top: 20px;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
             color: #999;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
 
         .close:hover {
             color: #333;
+            background-color: #f8f9fa;
+            transform: rotate(90deg);
         }
 
         .modal h2 {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: #333;
-        }
-
-        .modal .form-group {
-            margin-bottom: 15px;
-        }
-
-        .modal label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .modal input,
-        .modal select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .modal input:focus,
-        .modal select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(42, 211, 201, 0.2);
-        }
-
-        .modal-buttons {
             display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 20px;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+        }
+
+        .modal h2 i {
+            color: var(--primary-color);
         }
 
         .user-detail {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            align-items: center;
+            padding: 15px 0;
             border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .user-detail:hover {
+            background-color: #f8f9fa;
+            margin: 0 -15px;
+            padding: 15px;
+            border-radius: 8px;
         }
 
         .user-detail:last-child {
@@ -332,21 +561,71 @@
 
         .user-detail strong {
             color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-detail strong i {
+            color: var(--primary-color);
+            width: 18px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 25px;
+            flex-wrap: wrap;
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
+                width: var(--sidebar-collapsed-width);
+            }
+            
+            .sidebar.collapsed {
+                width: var(--sidebar-collapsed-width);
+            }
+            
+            .main-content {
+                margin-left: var(--sidebar-collapsed-width);
+            }
+            
+            .main-content.expanded {
+                margin-left: var(--sidebar-collapsed-width);
+            }
+
+            .menu-toggle {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .sidebar {
+                width: var(--sidebar-width);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.mobile-show {
+                transform: translateX(0);
             }
             
             .main-content {
                 margin-left: 0;
-                padding: 20px;
+                padding: 80px 20px 20px 20px;
             }
             
+            .main-content.expanded {
+                margin-left: 0;
+            }
+
             .form-row {
                 flex-direction: column;
             }
@@ -354,68 +633,200 @@
             .modal-content {
                 width: 95%;
                 margin: 10% auto;
+                padding: 25px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 700px;
+            }
+
+            .modal-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 80px 15px 15px 15px;
+            }
+
+            .form-container {
                 padding: 20px;
             }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .page-header h1 {
+                font-size: 20px;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* Custom scrollbar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.5);
         }
     </style>
 </head>
 
 <body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
     <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>Backoffice</h2>
-         <h2 th:if="${session.sessUserFirstName != null}">
-            Bonjour <span th:text="${session.sessUserFirstName}" ></span> !
-        </h2>
+    <div class="sidebar" id="sidebar">
+        <!-- Desktop Menu Toggle -->
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-angle-double-left"></i>
+        </button>
+        
+        <div class="sidebar-header">
+            <h2><i class="fas fa-cogs"></i> Backoffice</h2>
+            <div class="greeting" th:if="${session.sessUserFirstName != null}">
+                <i class="fas fa-user-circle"></i>
+                Bonjour <span th:text="${session.sessUserFirstName}"></span>
+            </div>
+
+            <a href="/user/logout" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt"></i>
+                Déconnexion
+            </a>
+        </div>
+        
         <ul>
-            <!-- Links to add ************ -->
-            <li><a href="#">Gestion des Plats</a></li>
-            <li><a href="#">Gestion de Stocks</a></li>
-            <li class="active"><a href="#">Gestion des Utilisateurs</a></li>
+            <li>
+                <a href="/kitcheaseGestion/creation" data-tooltip="Gestion des Plats">
+                    <i class="fas fa-utensils"></i>
+                    <span class="nav-text">Gestion des Plats</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-tooltip="Gestion de Stocks">
+                    <i class="fas fa-boxes"></i>
+                    <span class="nav-text">Gestion de Stocks</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="#" data-tooltip="Gestion des Utilisateurs">
+                    <i class="fas fa-users"></i>
+                    <span class="nav-text">Gestion des Utilisateurs</span>
+                </a>
+            </li>
         </ul>
     </div>
 
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content" id="mainContent">
         <div class="page-header">
-            <h1>Gestion des Utilisateurs</h1>
+            <h1>
+                <i class="fas fa-users-cog"></i>
+                Gestion des Utilisateurs
+            </h1>
         </div>
 
         <!-- Success & Error Messages -->
-        <div th:if="${error}" class="message error" th:text="${error}"></div>
-        <div th:if="${success}" class="message success" th:text="${success}"></div>
-        <div th:if="${creationOk}" class="message success" th:text="${creationOk}"></div>
-        <div th:if="${errorMessage}" class="message error" th:text="${errorMessage}"></div>
+        <div th:if="${error}" class="message error">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span th:text="${error}"></span>
+        </div>
+        <div th:if="${success}" class="message success">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${success}"></span>
+        </div>
+        <div th:if="${creationOk}" class="message success">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${creationOk}"></span>
+        </div>
+        <div th:if="${errorMessage}" class="message error">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span th:text="${errorMessage}"></span>
+        </div>
 
         <!-- User Creation Form -->
         <div class="form-container">
             <form action="/user/createUser" method="post">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="firstname">Nom</label>
+                        <label for="firstname"><i class="fas fa-user"></i>Nom</label>
                         <input type="text" id="firstname" name="firstname" placeholder="Nom de l'utilisateur" required />
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email"><i class="fas fa-envelope"></i>Email</label>
                         <input type="email" id="email" name="email" placeholder="email@example.com" required />
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="lastname">Prénom</label>
+                        <label for="lastname"><i class="fas fa-user-tag"></i>Prénom</label>
                         <input type="text" id="lastname" name="lastname" placeholder="Prénom de l'utilisateur" required />
                     </div>
                     <div class="form-group">
-                        <label for="password">Mot de passe</label>
+                        <label for="password"><i class="fas fa-lock"></i>Mot de passe</label>
                         <input type="password" id="password" name="password" required />
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <!-- Role section  -->
-                        <label for="access">Rôle</label>
+                        <label for="access"><i class="fas fa-user-shield"></i>Rôle</label>
                         <select id="access" name="access" required>
                             <option value="admin">Admin</option>
                             <option value="serveur">Serveur</option>
@@ -423,8 +834,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <!-- Statut  section  -->
-                        <label for="status">Statut</label>
+                        <label for="status"><i class="fas fa-toggle-on"></i>Statut</label>
                         <select id="status" name="status" required>
                             <option value="actif">Actif</option>
                             <option value="inactif">Inactif</option>
@@ -432,22 +842,29 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-success">Ajouter</button>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-plus"></i>
+                    Ajouter
+                </button>
             </form>
         </div>
 
         <!-- User Table section -->
         <div class="table-container">
+            <div class="table-header">
+                <i class="fas fa-table"></i>
+                <h3>Liste des Utilisateurs</h3>
+            </div>
             <table>
                 <thead>
                     <tr>
-                        <th>Username</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Statut</th>
-                        <th>Access</th>
-                        <th>Actions</th>
+                        <th><i class="fas fa-user"></i> Username</th>
+                        <th><i class="fas fa-id-badge"></i> First Name</th>
+                        <th><i class="fas fa-id-card"></i> Last Name</th>
+                        <th><i class="fas fa-envelope"></i> Email</th>
+                        <th><i class="fas fa-toggle-on"></i> Statut</th>
+                        <th><i class="fas fa-user-shield"></i> Access</th>
+                        <th><i class="fas fa-cogs"></i> Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -468,6 +885,7 @@
                                         th:data-email="${employee.email}"
                                         th:data-status="${employee.status}"
                                         th:data-access="${employee.access}">
+                                    <i class="fas fa-eye"></i>
                                     Voir
                                 </button>
                                 <button class="btn btn-primary btn-sm edit-btn"
@@ -478,11 +896,13 @@
                                         th:data-email="${employee.email}"
                                         th:data-status="${employee.status}"
                                         th:data-access="${employee.access}">
+                                    <i class="fas fa-edit"></i>
                                     Modifier
                                 </button>
                                 <a class="btn btn-danger btn-sm" 
                                    th:href="@{/user/deleteEmployee/{employeeId}(employeeId=${employee.employeeId})}"
                                    onclick="return confirm('Souhaitez-vous supprimer cet utilisateur?')">
+                                    <i class="fas fa-trash"></i>
                                     Supprimer
                                 </a>
                             </div>
@@ -497,12 +917,15 @@
     <div id="viewModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('viewModal')">&times;</span>
-            <h2>Détails de l'Utilisateur</h2>
+            <h2><i class="fas fa-user-circle"></i>Détails de l'Utilisateur</h2>
             <div id="userDetails">
                 <!-- User details will be populated here -->
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-primary" onclick="closeModal('viewModal')">Fermer</button>
+                <button class="btn btn-primary" onclick="closeModal('viewModal')">
+                    <i class="fas fa-times"></i>
+                    Fermer
+                </button>
             </div>
         </div>
     </div>
@@ -511,34 +934,33 @@
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('editModal')">&times;</span>
-
-            <h2>Modifier l'Utilisateur</h2>
+            <h2><i class="fas fa-user-edit"></i>Modifier l'Utilisateur</h2>
             
             <form id="editUserForm" action="#" method="post">
                 <input type="hidden" id="editEmployeeId" name="employeeId" />
                 
                 <div class="form-group">
-                    <label for="editUserName">Nom d'utilisateur:</label>
+                    <label for="editUserName"><i class="fas fa-user"></i>Nom d'utilisateur:</label>
                     <input type="text" id="editUserName" name="userName" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="editFirstName">Nom:</label>
+                    <label for="editFirstName"><i class="fas fa-id-badge"></i>Nom:</label>
                     <input type="text" id="editFirstName" name="firstName" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="editLastName">Prénom:</label>
+                    <label for="editLastName"><i class="fas fa-id-card"></i>Prénom:</label>
                     <input type="text" id="editLastName" name="lastName" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="editEmail">Email:</label>
+                    <label for="editEmail"><i class="fas fa-envelope"></i>Email:</label>
                     <input type="email" id="editEmail" name="email" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="editAccess">Rôle:</label>
+                    <label for="editAccess"><i class="fas fa-user-shield"></i>Rôle:</label>
                     <select id="editAccess" name="access" required>
                         <option value="admin">Admin</option>
                         <option value="serveur">Serveur</option>
@@ -547,7 +969,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="editStatus">Statut:</label>
+                    <label for="editStatus"><i class="fas fa-toggle-on"></i>Statut:</label>
                     <select id="editStatus" name="status" required>
                         <option value="actif">Actif</option>
                         <option value="inactif">Inactif</option>
@@ -555,16 +977,71 @@
                 </div>
 
                 <div class="modal-buttons">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Annuler</button>
-                    <button type="submit" class="btn btn-success">Sauvegarder</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">
+                        <i class="fas fa-times"></i>
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i>
+                        Sauvegarder
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
+        // Sidebar functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggleBtn = document.querySelector('.menu-toggle i');
+            
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                toggleBtn.className = 'fas fa-angle-double-right';
+            } else {
+                toggleBtn.className = 'fas fa-angle-double-left';
+            }
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            sidebar.classList.toggle('mobile-show');
+            overlay.classList.toggle('show');
+        }
+
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            sidebar.classList.remove('mobile-show');
+            overlay.classList.remove('show');
+        }
+
+        // Auto-collapse sidebar on desktop for better UX
+        function checkScreenSize() {
+            if (window.innerWidth <= 1024 && window.innerWidth > 768) {
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('mainContent');
+                const toggleBtn = document.querySelector('.menu-toggle i');
+                
+                if (!sidebar.classList.contains('collapsed')) {
+                    sidebar.classList.add('collapsed');
+                    mainContent.classList.add('expanded');
+                    toggleBtn.className = 'fas fa-angle-double-right';
+                }
+            }
+        }
+
         // Event listeners for buttons
         document.addEventListener('DOMContentLoaded', function() {
+            checkScreenSize();
+            
             // View button event listeners
             document.querySelectorAll('.view-btn').forEach(button => {
                 button.addEventListener('click', function() {
@@ -596,35 +1073,37 @@
             });
         });
 
+        window.addEventListener('resize', checkScreenSize);
+
         function viewUser(employeeId, userName, firstName, lastName, email, status, access) {
             const userDetails = document.getElementById('userDetails');
             userDetails.innerHTML = `
                 <div class="user-detail">
-                    <strong>ID:</strong>
+                    <strong><i class="fas fa-hashtag"></i>ID:</strong>
                     <span>${employeeId}</span>
                 </div>
                 <div class="user-detail">
-                    <strong>Nom d'utilisateur:</strong>
+                    <strong><i class="fas fa-user"></i>Nom d'utilisateur:</strong>
                     <span>${userName}</span>
                 </div>
                 <div class="user-detail">
-                    <strong>Nom:</strong>
+                    <strong><i class="fas fa-id-badge"></i>Nom:</strong>
                     <span>${firstName}</span>
                 </div>
                 <div class="user-detail">
-                    <strong>Prénom:</strong>
+                    <strong><i class="fas fa-id-card"></i>Prénom:</strong>
                     <span>${lastName}</span>
                 </div>
                 <div class="user-detail">
-                    <strong>Email:</strong>
+                    <strong><i class="fas fa-envelope"></i>Email:</strong>
                     <span>${email}</span>
                 </div>
                 <div class="user-detail">
-                    <strong>Statut:</strong>
-                    <span>${status}</span>
+                    <strong><i class="fas fa-toggle-on"></i>Statut:</strong>
+                    <span class="${status === 'actif' ? 'text-success' : 'text-danger'}">${status}</span>
                 </div>
                 <div class="user-detail">
-                    <strong>Rôle:</strong>
+                    <strong><i class="fas fa-user-shield"></i>Rôle:</strong>
                     <span>${access}</span>
                 </div>
             `;
@@ -663,6 +1142,24 @@
                 editModal.style.display = 'none';
             }
         }
+
+        // Close mobile sidebar when clicking on main content
+        document.getElementById('mainContent').addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                closeMobileSidebar();
+            }
+        });
+
+        // Handle escape key to close modals and mobile sidebar
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal('viewModal');
+                closeModal('editModal');
+                if (window.innerWidth <= 768) {
+                    closeMobileSidebar();
+                }
+            }
+        });
     </script>
 </body>
 </html>

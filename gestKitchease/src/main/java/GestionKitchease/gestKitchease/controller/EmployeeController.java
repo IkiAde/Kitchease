@@ -200,15 +200,40 @@ public class EmployeeController {
     public ModelAndView userManagement( HttpSession session) {
        
 
-        // Check if the user is logged in
+        checkUserAccess(session);
+        // // Check if the user is logged in
+        // if (session.getAttribute("sessUserName") == null) {
+        //     return new ModelAndView("redirect:/kitcheaseGestion/home"); // Redirect to login page if not logged in
+        // }
+
         if (session.getAttribute("sessUserName") == null) {
-            return new ModelAndView("redirect:/kitcheaseGestion/home"); // Redirect to login page if not logged in
+           // throw new RuntimeException("User not logged in");
+            notLoggedIn();
+                
+        }
+        
+
+        // Check if the user has admin access
+        if (!session.getAttribute("sessUserAccess").equals("admin")) {
+            throw new RuntimeException("User does not have admin access");
         }
 
         Iterable<Employee> employee = employeeService.findAll();
         Map<String, Object> model = Map.of("employeesList", employee);
 
         return new ModelAndView("/kitcheaseGestion/admin/usermanagement", model); // Return the admin user management view with the user data
+    }
+
+    public void checkUserAccess(HttpSession session) {
+        // Check if the user is logged in
+        
+    }
+
+
+    @GetMapping("notLoggedIn")
+    public ModelAndView notLoggedIn() {
+        return new ModelAndView("/kitcheaseGestion/error/notLoggedIn");
+        // Return the not logged in view
     }
 
 
@@ -284,11 +309,11 @@ public class EmployeeController {
 
 
     //logout section
-	@PostMapping("/logout")
+	@GetMapping("/logout")
 	
     public RedirectView logout(HttpSession session) {
         session.invalidate();
-        return new RedirectView("kitcheaseGestion/home"); 
+        return new RedirectView("/kitcheaseGestion/home"); 
     }
 
     
