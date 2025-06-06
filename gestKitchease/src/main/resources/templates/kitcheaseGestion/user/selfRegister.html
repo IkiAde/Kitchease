@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+
+</head>
+<body>
+    <!-- User Creation Form -->
+    <div class="form-container">
+        <form action="/user/Register" method="post">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstname">Nom</label>
+                    <input type="text" id="firstname" name="firstname" placeholder="Nom de l'utilisateur" required />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="email@example.com" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="lastname">Prénom</label>
+                    <input type="text" id="lastname" name="lastname" placeholder="Prénom de l'utilisateur" required />
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required />
+                </div>
+            </div>
+        </form>
+    </div>
+    
+
+</body>
+ 

@@ -80,14 +80,20 @@
 
     <div class="login-container">
         <h2>Connexion Back Office</h2>
+        
+        <p th:if="${error}" class="message error" th:text="${error}"></p>
+        <p th:if="${errorNotActive}" class="message error" th:text="${errorNotActive}"></p>
+
         <form action="/user/login" method="post">
-            <label for="username">Nom d'utilisateur</label>
-            <input type="text" id="username" name="username" required />
+            <label for="userName">Nom d'utilisateur</label>
+            <input type="text" id="userName" name="userName" required />
 
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="password" required />
 
             <input type="submit" value="Se connecter" />
+            <a href="#" style="display: block; text-align: center; margin-top: 10px; color: #2AD3C9;">Mot de passe oublié ?</a>
+            <a href="/user/selfRegister" style="display: block; text-align: center; margin-top: 10px; color: #2AD3C9;">Créer un compte</a>
         </form>
         <div class="footer-note">
             © 2025 KitchEase | Tous droits réservés

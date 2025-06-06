@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <style>
+        :root {
+            --success-green: #2e7d32;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #fdf6f0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #2AD3C9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f7e3dc;
+            color: #2AD3C9;
+        }
+
+        .message {
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        .message.success {
+            color: var(--success-green);
+        }
+
+        .message.error {
+            color: #c62828;
+        }
+
+        .button-success {
+            background-color: #2AD3C9;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .button-success:hover {
+            background-color: #1bb7af;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fffaf7;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 600px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        form label {
+            display: block;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        form input, form select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fffefc;
+        }
+
+        input[type="submit"] {
+            background-color: #2AD3C9;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1bb7af;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>User Management</h1>
+
+    <!-- Success & Error Messages -->
+    <p th:if="${error}" class="message error" th:text="${error}"></p>
+    <p th:if="${success}" class="message success" th:text="${success}"></p>
+
+    <hr>
+
+    <!-- Create User Button -->
+    <button class="button-success" onclick="openModal()">Créer un nouvel utilisateur</button>
+
+    <!-- Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Create New User</h2>
+            <p th:if="${creationOk}" class="message success" th:text="${creationOk}"></p>
+            <p th:if="${errorMessage}" class="message error" th:text="${errorMessage}"></p>
+
+            <!-- User Creation Form -->
+            <form action="/user/createUser" method="post">
+                <label>Nom:</label>
+                <input name="firstname" required />
+
+                <label>Prénom:</label>
+                <input name="lastname" required />
+
+                <label>Email:</label>
+                <input type="email" name="email" required />
+
+                <label>Mot de passe:</label>
+                <input type="password" name="password" required />
+
+                <label>Unité :</label>
+                <select name="unit" required>
+                    <option value="">--Choisir une unité--</option>
+                    <option value="cuisine">Cuisine</option>
+                    <option value="caisse">Caisse</option>
+                    <option value="salle">Salle</option>
+                    <option value="logistique">Logistique</option>
+                </select>
+
+                <label>Accès :</label>
+                <select name="access" required>
+                    <option value="">--Choisir un rôle--</option>
+                    <option value="admin">Admin</option>
+                    <option value="caisse">Caisse</option>
+                    <option value="salle">Salle</option>
+                    <option value="logistique">Logistique</option>
+                </select>
+
+                <input type="submit" value="Créer le nouveau compte" />
+            </form>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- User Table -->
+    <h2>All Users</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Unit</th>
+                <th>Access</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="employee : ${employeesList}">
+                <td th:text="${employee.userName}">username</td>
+                <td th:text="${employee.firstName}">firstname</td>
+                <td th:text="${employee.lastName}">lastname</td>
+                <td th:text="${employee.email}">email</td>
+                <td th:text="${employee.unit}">unit</td>
+                <td th:text="${employee.access}">access</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function openModal() {
+            document.getElementById("userModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("userModal").style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById("userModal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
