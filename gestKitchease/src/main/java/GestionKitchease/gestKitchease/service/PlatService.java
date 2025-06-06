@@ -33,26 +33,36 @@ public class PlatService implements PlatInterface{
 			plat.setImageData(image.getBytes());
 			plat.setImageContentType(image.getContentType());
 			platRepo.save(plat);
-			platProducer.sendPlatUpdate(plat);
+			//platProducer.sendPlatUpdate(plat);
 			
 		}
 		
 	}
 	
-	 private String convertToImageUrl(Plat plat) {
+	 /*private String convertToImageUrl(Plat plat) {
 	        return "/kitcheaseGestion/" + plat.getIdPlat() + "/image";
-	    }
+	    }*/
 
 	@Override
 	public void supprimerPlat(Long id) {
-		// TODO Auto-generated method stub
+		this.platRepo.deleteById(id);
 		
 	}
 
 	@Override
-	public void modifierPlat(Long id) {
-		// TODO Auto-generated method stub
-		
+	public void modifierPlat(String nom,Double newPrix, String newDescription, MultipartFile newImage) throws IOException {
+		Optional<Plat> optPlat= platRepo.findbyNom(nom);
+		if (optPlat.isPresent()) {	
+			  Plat platToModify = optPlat.get();
+			  platToModify.setPrix(newPrix);
+			  platToModify.setDescription(newDescription);
+			  platToModify.setImageData(newImage.getBytes());
+			  platToModify.setImageContentType(newImage.getContentType());
+			  
+		}
+		else {
+			throw new RuntimeException("Ce plat n'existe pas");
+		}
 	}
 
 	@Override
@@ -66,8 +76,14 @@ public class PlatService implements PlatInterface{
 		return this.platRepo.findById(id).get();
 	}
 
-	public List<Plat> getAllPlats() {
-		return (List<Plat>) this.platRepo.findAll();
+	public Iterable<Plat> getAllPlats() {
+		return this.platRepo.findAll();
 	}
+	
+	public Plat getPlatByNom(String nom) {
+	    return platRepo.findbyNom(nom)
+	                   .orElseThrow(() -> new RuntimeException("Ce plat n'existe pas"));
+	}
+
 
 }
