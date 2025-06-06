@@ -167,6 +167,7 @@ public class EmployeeController {
                     // Redirect to the appropriate page based on user access level                   
                     if (sessUserAccess.equals("admin")) {
                         return new ModelAndView("redirect:/user/userManagement");
+                        
                         //changement *******
                     } else if (sessUserAccess.equals("serveur")) {
 
