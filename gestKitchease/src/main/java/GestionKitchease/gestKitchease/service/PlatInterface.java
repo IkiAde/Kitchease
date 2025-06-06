@@ -9,6 +9,6 @@ public interface PlatInterface {
 	
 	public void creerPlat(String nom, Double prix, String description, MultipartFile image) throws IOException;
 	public void supprimerPlat(Long id);
-	public void modifierPlat(Long id);
+	public void modifierPlat(String nom,Double prix, String description, MultipartFile image)throws IOException;
 	public void updateStockPlat();
 }

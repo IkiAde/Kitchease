@@ -44,37 +44,51 @@ public class kitcheaseGestionController {
 	
 	@GetMapping("/creation")
 	public ModelAndView creation(Model model) {
-		List<Plat> plats= platService.getAllPlats();
+		Iterable<Plat> plats= platService.getAllPlats();
 		model.addAttribute("plats", plats);
 	    return new ModelAndView("kitcheaseGestion/creation"); 
 	}
 	
+	 @GetMapping("/modification")
+	    public ModelAndView afficherPageRecherche() {
+	        return new ModelAndView("kitcheaseGestion/modification");
+	    }
+	 
+	 @GetMapping("/modifier")
+	 public String afficherFormulaireModification(@RequestParam(required = false) String nom, Model model) {
+	     if (nom != null && !nom.isEmpty()) {
+	         try {
+	             Plat plat = platService.getPlatByNom(nom);
+	             model.addAttribute("platAModifier", plat);
+	         } catch (RuntimeException e) {
+	             model.addAttribute("erreur", e.getMessage());
+	         }
+	     }
+	     return "kitcheaseGestion/modification"; 
+	 }
+
+	
 	
 	@PostMapping("/creerPlat")
-	public RedirectView creerPlat(@RequestParam("nom") String nom,
+	public String creerPlat(@RequestParam("nom") String nom,
             @RequestParam("prix") double prix, 
             @RequestParam("description") String description, 
-            @RequestParam("image") MultipartFile image, Model model ) throws IOException {
+            @RequestParam("image") MultipartFile image ) throws IOException {
 
 	    platService.creerPlat(nom, prix, description, image);
-	    List<Plat> plats= platService.getAllPlats();
-	    model.addAttribute("plats", plats);
-	    model.addAttribute("success", "Le plat a été créé avec succès!");
-	    return new RedirectView("/kitcheaseGestion/creation");
+	    
+	    return "redirect:/kitcheaseGestion/creation";
 	}
 	
-	@GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
-        Plat plat = platService.getPlatById(id);
-        return ResponseEntity.ok()
-            .contentType(MediaType.parseMediaType(plat.getImageContentType()))
-            .body(plat.getImageData());
-    }
+	
 	
 	@PostMapping("/modifierPlat")
-	public RedirectView modifierPlat() {
-	    platService.modifierPlat(null);
-	    return new RedirectView("");
+	public String modifierPlat(@RequestParam("nom") String nom,
+            @RequestParam("prix") double prix, 
+            @RequestParam("description") String description, 
+            @RequestParam("image") MultipartFile image)throws IOException {
+	    platService.modifierPlat(nom, prix, description, image);
+	    return "redirect:/kitcheaseGestion/modification"/*?nom=" + nom*/;
 	}
 	
 	@PostMapping("/supprimerPlat")
